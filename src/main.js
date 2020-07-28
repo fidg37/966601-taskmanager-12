@@ -391,6 +391,6 @@ render(taskListElement, createTaskAddTemplate(), `afterbegin`);
 
 for (let i = 0; i < TASK_COUNT; i++) {
   render(taskListElement, createTaskCardTemplate(), `beforeend`);
-};
+}
 
 render(boardElement, createLoadButton(), `beforeend`);
