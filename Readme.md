@@ -1,7 +1,7 @@
 # Личный проект «Менеджер задач» [![Build status][travis-image]][travis-url]
 
 * Студент: [Nikita Shatskiy](https://up.htmlacademy.ru/ecmascript/12/user/966601).
-* Наставник: `Неизвестно`.
+* Наставник: `Станислав Посиделов`.
 
 ---
 
