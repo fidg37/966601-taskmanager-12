@@ -97,6 +97,12 @@ const createFilterTemplate = () => {
   );
 };
 
+const createBoardTemplate = () => {
+  `<section class="board container">
+    <div class="board__tasks"></div>
+  </section>`
+};
+
 const createSortTemplate = () => {
   return (
     `<div class="board__filter-list">
