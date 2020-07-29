@@ -377,8 +377,8 @@ render(siteMainElement, createBoardTemplate());
 const boardElement = siteMainElement.querySelector(`.board`);
 const taskListElement = boardElement.querySelector(`.board__tasks`);
 
-render(boardElement, createSortTemplate(), `afterbegin`);
-render(taskListElement, createTaskAddTemplate(), `afterbegin`);
+render(boardElement, createSortTemplate(), InsertPlace.AFTERBEGIN);
+render(taskListElement, createTaskAddTemplate(), InsertPlace.AFTERBEGIN);
 
 for (let i = 0; i < TASK_COUNT; i++) {
   render(taskListElement, createTaskCardTemplate());
