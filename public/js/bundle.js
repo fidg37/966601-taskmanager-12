@@ -557,7 +557,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const TASK_COUNT = 5;
+const IterationCount = {
+  DEFAULT: 1,
+  CARD: 5
+};
 
 const InsertPlace = {
   BEFOREEND: `beforeend`,
@@ -567,25 +570,28 @@ const InsertPlace = {
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-const render = (container, template, place = InsertPlace.BEFOREEND) => {
-  container.insertAdjacentHTML(place, template);
+const render = ({
+  container,
+  template,
+  place = InsertPlace.BEFOREEND,
+  iteration = IterationCount.DEFAULT
+}) => {
+  for (let i = 0; i < iteration; i++) {
+    container.insertAdjacentHTML(place, template);
+  }
 };
 
-render(siteHeaderElement, Object(_View_site_menu_js__WEBPACK_IMPORTED_MODULE_0__["createSiteMenuTemplate"])());
-render(siteMainElement, Object(_View_filter_js__WEBPACK_IMPORTED_MODULE_1__["createFilterTemplate"])());
-render(siteMainElement, Object(_View_board_js__WEBPACK_IMPORTED_MODULE_2__["createBoardTemplate"])());
+render({container: siteHeaderElement, template: Object(_View_site_menu_js__WEBPACK_IMPORTED_MODULE_0__["createSiteMenuTemplate"])()});
+render({container: siteMainElement, template: Object(_View_filter_js__WEBPACK_IMPORTED_MODULE_1__["createFilterTemplate"])()});
+render({container: siteMainElement, template: Object(_View_board_js__WEBPACK_IMPORTED_MODULE_2__["createBoardTemplate"])()});
 
 const boardElement = siteMainElement.querySelector(`.board`);
 const taskListElement = boardElement.querySelector(`.board__tasks`);
 
-render(boardElement, Object(_View_sorting_js__WEBPACK_IMPORTED_MODULE_3__["createSortTemplate"])(), InsertPlace.AFTERBEGIN);
-render(taskListElement, Object(_View_task_card_add_js__WEBPACK_IMPORTED_MODULE_4__["createTaskAddTemplate"])(), InsertPlace.AFTERBEGIN);
-
-for (let i = 0; i < TASK_COUNT; i++) {
-  render(taskListElement, Object(_View_task_card_js__WEBPACK_IMPORTED_MODULE_5__["createTaskCardTemplate"])());
-}
-
-render(boardElement, Object(_View_load_button_js__WEBPACK_IMPORTED_MODULE_6__["createLoadButton"])());
+render({container: boardElement, template: Object(_View_sorting_js__WEBPACK_IMPORTED_MODULE_3__["createSortTemplate"])(), place: InsertPlace.AFTERBEGIN});
+render({container: taskListElement, template: Object(_View_task_card_add_js__WEBPACK_IMPORTED_MODULE_4__["createTaskAddTemplate"])(), place: InsertPlace.AFTERBEGIN});
+render({container: taskListElement, template: Object(_View_task_card_js__WEBPACK_IMPORTED_MODULE_5__["createTaskCardTemplate"])(), iteration: IterationCount.CARD});
+render({container: boardElement, template: Object(_View_load_button_js__WEBPACK_IMPORTED_MODULE_6__["createLoadButton"])()});
 
 
 /***/ })
