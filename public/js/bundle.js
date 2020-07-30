@@ -86,61 +86,35 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./src/main.js":
-/*!*********************!*\
-  !*** ./src/main.js ***!
-  \*********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ "./src/View/board.js":
+/*!***************************!*\
+  !*** ./src/View/board.js ***!
+  \***************************/
+/*! exports provided: createBoardTemplate */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-
-
-const TASK_COUNT = 5;
-
-const InsertPlace = {
-  BEFOREEND: `beforeend`,
-  AFTERBEGIN: `afterbegin`
-};
-
-const siteMainElement = document.querySelector(`.main`);
-const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
-
-const render = (container, template, place = InsertPlace.BEFOREEND) => {
-  container.insertAdjacentHTML(place, template);
-};
-
-const createSiteMenuTemplate = () => (
-  `<section class="control__btn-wrap">
-    <input
-      type="radio"
-      name="control"
-      id="control__new-task"
-      class="control__input visually-hidden"
-    />
-    <label for="control__new-task" class="control__label control__label--new-task"
-      >+ ADD NEW TASK</label
-    >
-    <input
-      type="radio"
-      name="control"
-      id="control__task"
-      class="control__input visually-hidden"
-      checked
-    />
-    <label for="control__task" class="control__label">TASKS</label>
-    <input
-      type="radio"
-      name="control"
-      id="control__statistic"
-      class="control__input visually-hidden"
-    />
-    <label for="control__statistic" class="control__label"
-      >STATISTICS</label
-    >
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createBoardTemplate", function() { return createBoardTemplate; });
+const createBoardTemplate = () => (
+  `<section class="board container">
+    <div class="board__tasks"></div>
   </section>`
 );
 
+
+/***/ }),
+
+/***/ "./src/View/filter.js":
+/*!****************************!*\
+  !*** ./src/View/filter.js ***!
+  \****************************/
+/*! exports provided: createFilterTemplate */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createFilterTemplate", function() { return createFilterTemplate; });
 const createFilterTemplate = () => (
   `<section class="main__filter filter container">
     <input
@@ -203,12 +177,80 @@ const createFilterTemplate = () => (
   </section>`
 );
 
-const createBoardTemplate = () => (
-  `<section class="board container">
-    <div class="board__tasks"></div>
+
+/***/ }),
+
+/***/ "./src/View/load-button.js":
+/*!*********************************!*\
+  !*** ./src/View/load-button.js ***!
+  \*********************************/
+/*! exports provided: createLoadButton */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createLoadButton", function() { return createLoadButton; });
+const createLoadButton = () => (
+  `<button class="load-more" type="button">load more</button>`
+);
+
+
+/***/ }),
+
+/***/ "./src/View/site-menu.js":
+/*!*******************************!*\
+  !*** ./src/View/site-menu.js ***!
+  \*******************************/
+/*! exports provided: createSiteMenuTemplate */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createSiteMenuTemplate", function() { return createSiteMenuTemplate; });
+const createSiteMenuTemplate = () => (
+  `<section class="control__btn-wrap">
+    <input
+      type="radio"
+      name="control"
+      id="control__new-task"
+      class="control__input visually-hidden"
+    />
+    <label for="control__new-task" class="control__label control__label--new-task"
+      >+ ADD NEW TASK</label
+    >
+    <input
+      type="radio"
+      name="control"
+      id="control__task"
+      class="control__input visually-hidden"
+      checked
+    />
+    <label for="control__task" class="control__label">TASKS</label>
+    <input
+      type="radio"
+      name="control"
+      id="control__statistic"
+      class="control__input visually-hidden"
+    />
+    <label for="control__statistic" class="control__label"
+      >STATISTICS</label
+    >
   </section>`
 );
 
+
+/***/ }),
+
+/***/ "./src/View/sorting.js":
+/*!*****************************!*\
+  !*** ./src/View/sorting.js ***!
+  \*****************************/
+/*! exports provided: createSortTemplate */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createSortTemplate", function() { return createSortTemplate; });
 const createSortTemplate = () => (
   `<div class="board__filter-list">
     <a href="#" class="board__filter" data-sort-type="default">SORT BY DEFAULT</a>
@@ -217,6 +259,19 @@ const createSortTemplate = () => (
   </div>`
 );
 
+
+/***/ }),
+
+/***/ "./src/View/task-card-add.js":
+/*!***********************************!*\
+  !*** ./src/View/task-card-add.js ***!
+  \***********************************/
+/*! exports provided: createTaskAddTemplate */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTaskAddTemplate", function() { return createTaskAddTemplate; });
 const createTaskAddTemplate = () => (
   `<article class="card card--edit card--black">
     <form class="card__form" method="get">
@@ -416,6 +471,19 @@ const createTaskAddTemplate = () => (
   </article>`
 );
 
+
+/***/ }),
+
+/***/ "./src/View/task-card.js":
+/*!*******************************!*\
+  !*** ./src/View/task-card.js ***!
+  \*******************************/
+/*! exports provided: createTaskCardTemplate */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createTaskCardTemplate", function() { return createTaskCardTemplate; });
 const createTaskCardTemplate = () => (
   `<article class="card card--black">
     <div class="card__form">
@@ -462,25 +530,62 @@ const createTaskCardTemplate = () => (
   </article>`
 );
 
-const createLoadButton = () => (
-  `<button class="load-more" type="button">load more</button>`
-);
 
-render(siteHeaderElement, createSiteMenuTemplate());
-render(siteMainElement, createFilterTemplate());
-render(siteMainElement, createBoardTemplate());
+/***/ }),
+
+/***/ "./src/main.js":
+/*!*********************!*\
+  !*** ./src/main.js ***!
+  \*********************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _View_site_menu_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./View/site-menu.js */ "./src/View/site-menu.js");
+/* harmony import */ var _View_filter_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./View/filter.js */ "./src/View/filter.js");
+/* harmony import */ var _View_board_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./View/board.js */ "./src/View/board.js");
+/* harmony import */ var _View_sorting_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./View/sorting.js */ "./src/View/sorting.js");
+/* harmony import */ var _View_task_card_add_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./View/task-card-add.js */ "./src/View/task-card-add.js");
+/* harmony import */ var _View_task_card_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./View/task-card.js */ "./src/View/task-card.js");
+/* harmony import */ var _View_load_button_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./View/load-button.js */ "./src/View/load-button.js");
+
+
+
+
+
+
+
+
+const TASK_COUNT = 5;
+
+const InsertPlace = {
+  BEFOREEND: `beforeend`,
+  AFTERBEGIN: `afterbegin`
+};
+
+const siteMainElement = document.querySelector(`.main`);
+const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
+
+const render = (container, template, place = InsertPlace.BEFOREEND) => {
+  container.insertAdjacentHTML(place, template);
+};
+
+render(siteHeaderElement, Object(_View_site_menu_js__WEBPACK_IMPORTED_MODULE_0__["createSiteMenuTemplate"])());
+render(siteMainElement, Object(_View_filter_js__WEBPACK_IMPORTED_MODULE_1__["createFilterTemplate"])());
+render(siteMainElement, Object(_View_board_js__WEBPACK_IMPORTED_MODULE_2__["createBoardTemplate"])());
 
 const boardElement = siteMainElement.querySelector(`.board`);
 const taskListElement = boardElement.querySelector(`.board__tasks`);
 
-render(boardElement, createSortTemplate(), InsertPlace.AFTERBEGIN);
-render(taskListElement, createTaskAddTemplate(), InsertPlace.AFTERBEGIN);
+render(boardElement, Object(_View_sorting_js__WEBPACK_IMPORTED_MODULE_3__["createSortTemplate"])(), InsertPlace.AFTERBEGIN);
+render(taskListElement, Object(_View_task_card_add_js__WEBPACK_IMPORTED_MODULE_4__["createTaskAddTemplate"])(), InsertPlace.AFTERBEGIN);
 
 for (let i = 0; i < TASK_COUNT; i++) {
-  render(taskListElement, createTaskCardTemplate());
+  render(taskListElement, Object(_View_task_card_js__WEBPACK_IMPORTED_MODULE_5__["createTaskCardTemplate"])());
 }
 
-render(boardElement, createLoadButton());
+render(boardElement, Object(_View_load_button_js__WEBPACK_IMPORTED_MODULE_6__["createLoadButton"])());
 
 
 /***/ })
