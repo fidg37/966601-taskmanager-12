@@ -31,11 +31,21 @@ export const getRandomBoolean = () => (
 );
 
 export const humanizeDate = (date) => {
-  if (date === null) {
-    return ``;
+  return date.toLocaleDateString(`en`, {day: `numeric`, month: `long`});
+};
+
+export const isTaskRepeating = (repeating) => (
+  Object.values(repeating).some(Boolean)
+);
+
+export const isTaskExpired = (dueDate) => {
+  if (dueDate === null) {
+    return false;
   }
 
-  const formalDate = new Date(date);
+  let currentDate = new Date();
 
-  return formalDate.toLocaleDateString(`en`, {month: `long`, day: `numeric`});
+  currentDate.setHours(23, 59, 59, 999);
+
+  return currentDate.getTime() > dueDate.getTime();
 };

@@ -1,25 +1,9 @@
-import {humanizeDate} from "../util.js";
-
-const isExpired = (dueDate) => {
-  if (dueDate === null) {
-    return false;
-  }
-
-  let currentDate = new Date();
-
-  currentDate.setHours(23, 59, 59, 999);
-
-  return currentDate.getTime() > dueDate.getTime();
-};
-
-const isRepeating = (repeating) => (
-  Object.values(repeating).some(Boolean)
-);
+import {humanizeDate, isTaskRepeating, isTaskExpired} from "../util.js";
 
 export const createTaskCardTemplate = (task) => {
   const {color, dueDate, description, repeating, isArchive, isFavorite} = task;
 
-  const repeatClassName = isRepeating(repeating)
+  const repeatClassName = isTaskRepeating(repeating)
     ? `card--repeat`
     : ``;
 
@@ -31,9 +15,11 @@ export const createTaskCardTemplate = (task) => {
     ? `card__btn--favorites card__btn--disabled`
     : `card__btn--favorites`;
 
-  const deadlineClassName = isExpired(dueDate)
+  const deadlineClassName = isTaskExpired(dueDate)
     ? `card--deadline`
     : ``;
+
+  const date = dueDate !== null ? humanizeDate(dueDate) : ``;
 
   return (
     `<article class="card card--${color} ${deadlineClassName} ${repeatClassName}">
@@ -69,7 +55,7 @@ export const createTaskCardTemplate = (task) => {
               <div class="card__dates">
                 <div class="card__date-deadline">
                   <p class="card__input-deadline-wrap">
-                    <span class="card__date">${humanizeDate(dueDate)}</span>
+                    <span class="card__date">${date}</span>
                   </p>
                 </div>
               </div>

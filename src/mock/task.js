@@ -1,3 +1,4 @@
+import {COLORS} from "../constants.js";
 import {getRandomInteger, getRandomBoolean} from "../util.js";
 
 const generateDescription = () => {
@@ -29,7 +30,7 @@ const generateDate = () => {
 
   currentDate.setDate(currentDate.getDate() + dateGap);
 
-  return currentDate;
+  return new Date(currentDate);
 };
 
 const generateRepeating = () => (
@@ -44,8 +45,7 @@ const generateRepeating = () => (
   }
 );
 
-const getRandomColor = () => {
-  const colors = [`black`, `yellow`, `blue`, `green`, `pink`];
+const getRandomColor = (colors) => {
   const randomIndex = getRandomInteger(0, colors.length - 1);
 
   return colors[randomIndex];
@@ -69,7 +69,7 @@ export const generateTask = () => {
     description: generateDescription(),
     dueDate,
     repeating,
-    color: getRandomColor(),
+    color: getRandomColor(COLORS),
     isArchive: getRandomBoolean(),
     isFavorite: getRandomBoolean()
   };
