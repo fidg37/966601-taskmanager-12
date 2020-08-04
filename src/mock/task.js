@@ -16,7 +16,7 @@ const generateDate = () => {
   const isDate = getRandomBoolean();
 
   if (!isDate) {
-    return null;
+    return ``;
   }
 
   const DATE_MAX_GAP = 7;
@@ -29,9 +29,7 @@ const generateDate = () => {
 
   currentDate.setDate(currentDate.getDate() + dateGap);
 
-  const humanizeDate = currentDate.toLocaleDateString(`en`, {month: `long`, day: `numeric`});
-
-  return humanizeDate;
+  return currentDate;
 };
 
 const generateRepeating = () => (
@@ -55,7 +53,7 @@ const getRandomColor = () => {
 
 export const generateTask = () => {
   const dueDate = generateDate();
-  const repeating = dueDate === null
+  const repeating = dueDate === ``
     ? generateRepeating()
     : {
       mo: false,
@@ -76,6 +74,3 @@ export const generateTask = () => {
     isFavorite: getRandomBoolean()
   };
 };
-
-console.log(generateTask());
-

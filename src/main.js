@@ -8,6 +8,8 @@ import {createLoadButton} from "./View/load-button.js";
 import {IterationCount, InsertPlace, render} from "./util.js";
 import {generateTask} from "./mock/task.js";
 
+const tasks = new Array(IterationCount.CARD).fill().map(generateTask);
+
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
@@ -20,5 +22,9 @@ const taskListElement = boardElement.querySelector(`.board__tasks`);
 
 render({container: boardElement, template: createSortTemplate(), place: InsertPlace.AFTERBEGIN});
 render({container: taskListElement, template: createTaskAddTemplate(), place: InsertPlace.AFTERBEGIN});
-render({container: taskListElement, template: createTaskCardTemplate(), iteration: IterationCount.CARD});
+
+for (let i = 0; i < tasks.length; i++) {
+  render({container: taskListElement, template: createTaskCardTemplate(tasks[i])});
+}
+
 render({container: boardElement, template: createLoadButton()});

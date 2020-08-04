@@ -1,14 +1,14 @@
-const IterationCount = {
+export const IterationCount = {
   DEFAULT: 1,
-  CARD: 5
+  CARD: 8
 };
 
-const InsertPlace = {
+export const InsertPlace = {
   BEFOREEND: `beforeend`,
   AFTERBEGIN: `afterbegin`
 };
 
-const render = ({
+export const render = ({
   container,
   template,
   place = InsertPlace.BEFOREEND,
@@ -30,4 +30,12 @@ export const getRandomBoolean = () => (
   Boolean(getRandomInteger(0, 1))
 );
 
-export {IterationCount, InsertPlace, render};
+export const humanizeDate = (date) => {
+  if (date === ``) {
+    return ``;
+  }
+
+  const formalDate = new Date(date);
+
+  return formalDate.toLocaleDateString(`en`, {month: `long`, day: `numeric`});
+};
