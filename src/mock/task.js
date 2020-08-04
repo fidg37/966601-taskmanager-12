@@ -34,11 +34,30 @@ const generateDate = () => {
   return humanizeDate;
 };
 
+const generateRepeating = () => (
+  {
+    mo: false,
+    tu: false,
+    we: getRandomBoolean(),
+    th: false,
+    fr: getRandomBoolean(),
+    sa: false,
+    su: false
+  }
+);
+
+const getRandomColor = () => {
+  const colors = [`black`, `yellow`, `blue`, `green`, `pink`];
+  const randomIndex = getRandomInteger(0, colors.length - 1);
+
+  return colors[randomIndex];
+};
+
 export const generateTask = () => {
-  return {
-    description: generateDescription(),
-    dueDate: generateDate(),
-    repeating: {
+  const dueDate = generateDate();
+  const repeating = dueDate === null
+    ? generateRepeating()
+    : {
       mo: false,
       tu: false,
       we: false,
@@ -46,10 +65,17 @@ export const generateTask = () => {
       fr: false,
       sa: false,
       su: false
-    },
-    color: `black`,
-    isArchive: false,
-    isFavorite: false
+    };
+
+  return {
+    description: generateDescription(),
+    dueDate,
+    repeating,
+    color: getRandomColor(),
+    isArchive: getRandomBoolean(),
+    isFavorite: getRandomBoolean()
   };
 };
+
+console.log(generateTask());
 
