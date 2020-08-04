@@ -31,7 +31,7 @@ export const getRandomBoolean = () => (
 );
 
 export const humanizeDate = (date) => {
-  if (date === ``) {
+  if (date === null) {
     return ``;
   }
 

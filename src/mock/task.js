@@ -16,7 +16,7 @@ const generateDate = () => {
   const isDate = getRandomBoolean();
 
   if (!isDate) {
-    return ``;
+    return null;
   }
 
   const DATE_MAX_GAP = 7;
@@ -53,7 +53,7 @@ const getRandomColor = () => {
 
 export const generateTask = () => {
   const dueDate = generateDate();
-  const repeating = dueDate === ``
+  const repeating = dueDate === null
     ? generateRepeating()
     : {
       mo: false,
