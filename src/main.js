@@ -6,6 +6,9 @@ import {createTaskAddTemplate} from "./View/task-card-add.js";
 import {createTaskCardTemplate} from "./View/task-card.js";
 import {createLoadButton} from "./View/load-button.js";
 import {IterationCount, InsertPlace, render} from "./util.js";
+import {generateTask} from "./mock/task.js";
+
+console.log(generateTask());
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
