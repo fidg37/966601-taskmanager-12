@@ -1,12 +1,4 @@
-export const IterationCount = {
-  DEFAULT: 1,
-  CARD: 3
-};
-
-export const InsertPlace = {
-  BEFOREEND: `beforeend`,
-  AFTERBEGIN: `afterbegin`
-};
+import {IterationCount, InsertPlace} from "./constants.js";
 
 export const render = ({
   container,
