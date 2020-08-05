@@ -7,14 +7,16 @@ import {createTaskCardTemplate} from "./View/task-card.js";
 import {createLoadButton} from "./View/load-button.js";
 import {IterationCount, InsertPlace, render} from "./util.js";
 import {generateTask} from "./mock/task.js";
+import {generateFilter} from "./mock/filter.js";
 
 const tasks = new Array(IterationCount.CARD).fill().map(generateTask);
+const filters = generateFilter(tasks);
 
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
 render({container: siteHeaderElement, template: createSiteMenuTemplate()});
-render({container: siteMainElement, template: createFilterTemplate()});
+render({container: siteMainElement, template: createFilterTemplate(filters)});
 render({container: siteMainElement, template: createBoardTemplate()});
 
 const boardElement = siteMainElement.querySelector(`.board`);
