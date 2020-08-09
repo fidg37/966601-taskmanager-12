@@ -22,9 +22,9 @@ export const getRandomBoolean = () => (
   Boolean(getRandomInteger(0, 1))
 );
 
-export const humanizeDate = (date) => {
-  return date.toLocaleDateString(`en`, {day: `numeric`, month: `long`});
-};
+export const humanizeDate = (date) => (
+  date.toLocaleDateString(`en`, {day: `numeric`, month: `long`})
+);
 
 export const isTaskRepeating = (repeating) => (
   Object.values(repeating).some(Boolean)

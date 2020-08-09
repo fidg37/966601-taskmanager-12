@@ -1,5 +1,5 @@
 const createFilterElementsTemplate = (filters) => (
-  Object(filters).map((filter, filterIndex) => {
+  [...filters].map((filter, filterIndex) => {
     const {name, count} = filter;
 
     return (

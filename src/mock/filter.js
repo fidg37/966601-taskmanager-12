@@ -17,11 +17,11 @@ const taskToFilterMap = {
   archive: (tasks) => tasks.filter((task) => task.isArchive).length
 };
 
-export const generateFilter = (tasks) => {
-  return Object.entries(taskToFilterMap).map(([filterName, filterValue]) => {
-    return {
+export const generateFilter = (tasks) => (
+  Object.entries(taskToFilterMap).map(([filterName, filterValue]) => (
+    {
       name: filterName,
       count: filterValue(tasks)
-    };
-  });
-};
+    }
+  ))
+);
