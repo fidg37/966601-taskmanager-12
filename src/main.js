@@ -30,4 +30,4 @@ for (let i = 0; i < Math.min(tasks.length, IterationCount.MAX_CARD_PER_STEP); i+
   render({container: taskListElement, template: createTaskCardTemplate(tasks[i])});
 }
 
-createLoadButton();
+createLoadButton(tasks, boardElement, taskListElement);

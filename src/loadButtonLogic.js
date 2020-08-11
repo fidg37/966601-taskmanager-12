@@ -1,30 +1,34 @@
 import {IterationCount} from "./constants.js";
 import {render} from "./util";
-import {taskListElement, tasks, boardElement} from "./main.js";
 import {createTaskCardTemplate} from "./View/task-card";
 import {createLoadButtonTemplate} from "./View/load-button.js";
 
-const loadButtonClickEvent = (evt) => {
-  evt.preventDefault();
+const loadButtonClickEvent = (tasks) => (
+  (taskListContainer) => (
+    (button) => (
+      (evt) => {
+        evt.preventDefault();
 
-  const renderedTasksCount = taskListElement.querySelectorAll(`.card__form`).length;
-  if (renderedTasksCount >= tasks.length) {
-    const button = boardElement.querySelector(`.load-more`);
-    button.removeEventListener(`click`, loadButtonClickEvent);
-    button.remove();
-  } else {
-    tasks
-      .slice(renderedTasksCount, renderedTasksCount + IterationCount.MAX_CARD_PER_STEP)
-      .forEach((task) => render({container: taskListElement, template: createTaskCardTemplate(task)}));
-  }
-};
+        const renderedTasksCount = taskListContainer.querySelectorAll(`.card__form`).length;
+        if (renderedTasksCount >= tasks.length) {
+          button.removeEventListener(`click`, loadButtonClickEvent(tasks)(taskListContainer)(button));
+          button.remove();
+        } else {
+          tasks
+        .slice(renderedTasksCount, renderedTasksCount + IterationCount.MAX_CARD_PER_STEP)
+        .forEach((task) => render({container: taskListContainer, template: createTaskCardTemplate(task)}));
+        }
+      }
+    )
+  )
+);
 
-export const createLoadButton = () => {
+export const createLoadButton = (tasks, buttonContainer, taskListContainer) => {
   if (tasks.length > IterationCount.MAX_CARD_PER_STEP) {
-    render({container: boardElement, template: createLoadButtonTemplate()});
+    render({container: buttonContainer, template: createLoadButtonTemplate()});
 
-    const button = boardElement.querySelector(`.load-more`);
+    const button = buttonContainer.querySelector(`.load-more`);
 
-    button.addEventListener(`click`, loadButtonClickEvent);
+    button.addEventListener(`click`, loadButtonClickEvent(tasks)(taskListContainer)(button));
   }
 };
