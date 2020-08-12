@@ -3,6 +3,8 @@ import {render} from "./util";
 import {createTaskCardTemplate} from "./View/task-card";
 import {createLoadButtonTemplate} from "./View/load-button.js";
 
+let handler;
+
 const loadButtonClickEvent = (tasks, taskListContainer, button) => (evt) => {
   evt.preventDefault();
 
@@ -13,9 +15,8 @@ const loadButtonClickEvent = (tasks, taskListContainer, button) => (evt) => {
     .forEach((task) => render({container: taskListContainer, template: createTaskCardTemplate(task)}));
 
   if (renderedTasksCount + IterationCount.MAX_CARD_PER_STEP >= tasks.length) {
-    button.removeEventListener(`click`, loadButtonClickEvent(tasks, taskListContainer, button));
-    //button.remove();
-    console.log(`EVENT!`);
+    button.removeEventListener(`click`, handler);
+    button.remove();
   }
 };
 
@@ -25,6 +26,8 @@ export const createLoadButton = (tasks, buttonContainer, taskListContainer) => {
 
     const button = buttonContainer.querySelector(`.load-more`);
 
-    button.addEventListener(`click`, loadButtonClickEvent(tasks, taskListContainer, button));
+    handler = loadButtonClickEvent(tasks, taskListContainer, button);
+
+    button.addEventListener(`click`, handler);
   }
 };
