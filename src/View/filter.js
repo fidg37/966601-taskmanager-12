@@ -1,8 +1,13 @@
-const createFilterElementsTemplate = (filters) => (
-  [...filters].map((filter, filterIndex) => {
-    const {name, count} = filter;
+import {createElement} from "../util.js";
 
-    return (
+export default class Filter {
+  constructor(filters) {
+    this._element = null;
+    this._filters = filters;
+  }
+
+  _createFilterElementsTemplate(filters) {
+    return filters.map(({name, count}, filterIndex) => (
       `<input
         type="radio"
         id="filter__${name}"
@@ -13,14 +18,27 @@ const createFilterElementsTemplate = (filters) => (
       <label for="filter__${name}" class="filter__label"
         >${name}<span class="filter__${name}-count"> ${count}</span></label
       >`
-    );
-  }).join(``)
-);
+    )).join(``);
+  }
 
-export const createFilterTemplate = (filters) => {
-  const filtersItemTemplate = createFilterElementsTemplate(filters);
+  _createFilterTemplate(filters) {
+    return (`<section class="main__filter filter container">
+      ${this._createFilterElementsTemplate(filters)}
+    </section>`);
+  }
 
-  return (`<section class="main__filter filter container">
-    ${filtersItemTemplate}
-  </section>`);
-};
+  getTemplate() {
+    return this._createFilterTemplate(this._filters);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

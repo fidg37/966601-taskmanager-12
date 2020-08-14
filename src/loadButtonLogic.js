@@ -1,7 +1,7 @@
 import {IterationCount} from "./constants.js";
-import {render} from "./util";
-import {createTaskCardTemplate} from "./View/task-card";
-import {createLoadButtonTemplate} from "./View/load-button.js";
+import {renderElement} from "./util";
+import TaskCardView from "./View/task-card";
+import LoadButtonView from "./View/load-button.js";
 
 let handler;
 
@@ -12,7 +12,7 @@ const loadButtonClickEvent = (tasks, taskListContainer, button) => (evt) => {
 
   tasks
     .slice(renderedTasksCount, renderedTasksCount + IterationCount.MAX_CARD_PER_STEP)
-    .forEach((task) => render({container: taskListContainer, template: createTaskCardTemplate(task)}));
+    .forEach((task) => renderElement({container: taskListContainer, element: new TaskCardView(task).getElement()}));
 
   if (renderedTasksCount + IterationCount.MAX_CARD_PER_STEP >= tasks.length) {
     button.removeEventListener(`click`, handler);
@@ -22,12 +22,12 @@ const loadButtonClickEvent = (tasks, taskListContainer, button) => (evt) => {
 
 export const createLoadButton = (tasks, buttonContainer, taskListContainer) => {
   if (tasks.length > IterationCount.MAX_CARD_PER_STEP) {
-    render({container: buttonContainer, template: createLoadButtonTemplate()});
-
-    const button = buttonContainer.querySelector(`.load-more`);
+    const button = new LoadButtonView().getElement();
 
     handler = loadButtonClickEvent(tasks, taskListContainer, button);
 
     button.addEventListener(`click`, handler);
+
+    renderElement({container: buttonContainer, element: button});
   }
 };

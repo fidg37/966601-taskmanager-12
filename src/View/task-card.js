@@ -1,68 +1,88 @@
-import {humanizeDate, isTaskRepeating, isTaskExpired} from "../util.js";
+import {humanizeDate, isTaskRepeating, isTaskExpired, createElement} from "../util.js";
 
-export const createTaskCardTemplate = (task) => {
-  const {color, dueDate, description, repeating, isArchive, isFavorite} = task;
+export default class TaskCard {
+  constructor(task) {
+    this._element = null;
+    this._task = task;
+  }
 
-  const repeatClassName = isTaskRepeating(repeating)
-    ? `card--repeat`
-    : ``;
+  _createTaskCardTemplate({color, dueDate, description, repeating, isArchive, isFavorite}) {
+    const repeatClassName = isTaskRepeating(repeating)
+      ? `card--repeat`
+      : ``;
 
-  const archiveClassName = isArchive
-    ? `card__btn--archive card__btn--disabled`
-    : `card__btn--archive`;
+    const archiveClassName = isArchive
+      ? `card__btn--archive card__btn--disabled`
+      : `card__btn--archive`;
 
-  const favoriteClassName = isFavorite
-    ? `card__btn--favorites card__btn--disabled`
-    : `card__btn--favorites`;
+    const favoriteClassName = isFavorite
+      ? `card__btn--favorites card__btn--disabled`
+      : `card__btn--favorites`;
 
-  const deadlineClassName = isTaskExpired(dueDate)
-    ? `card--deadline`
-    : ``;
+    const deadlineClassName = isTaskExpired(dueDate)
+      ? `card--deadline`
+      : ``;
 
-  const date = dueDate !== null ? humanizeDate(dueDate) : ``;
+    const date = dueDate !== null ? humanizeDate(dueDate) : ``;
 
-  return (
-    `<article class="card card--${color} ${deadlineClassName} ${repeatClassName}">
-      <div class="card__form">
-        <div class="card__inner">
-          <div class="card__control">
-            <button type="button" class="card__btn card__btn--edit">
-              edit
-            </button>
-            <button type="button" class="card__btn ${archiveClassName}">
-              archive
-            </button>
-            <button
-              type="button"
-              class="card__btn ${favoriteClassName}"
-            >
-              favorites
-            </button>
-          </div>
-
-          <div class="card__color-bar">
-            <svg class="card__color-bar-wave" width="100%" height="10">
-              <use xlink:href="#wave"></use>
-            </svg>
-          </div>
-
-          <div class="card__textarea-wrap">
-            <p class="card__text">${description}</p>
-          </div>
-
-          <div class="card__settings">
-            <div class="card__details">
-              <div class="card__dates">
-                <div class="card__date-deadline">
-                  <p class="card__input-deadline-wrap">
-                    <span class="card__date">${date}</span>
-                  </p>
+    return (
+      `<article class="card card--${color} ${deadlineClassName} ${repeatClassName}">
+        <div class="card__form">
+          <div class="card__inner">
+            <div class="card__control">
+              <button type="button" class="card__btn card__btn--edit">
+                edit
+              </button>
+              <button type="button" class="card__btn ${archiveClassName}">
+                archive
+              </button>
+              <button
+                type="button"
+                class="card__btn ${favoriteClassName}"
+              >
+                favorites
+              </button>
+            </div>
+  
+            <div class="card__color-bar">
+              <svg class="card__color-bar-wave" width="100%" height="10">
+                <use xlink:href="#wave"></use>
+              </svg>
+            </div>
+  
+            <div class="card__textarea-wrap">
+              <p class="card__text">${description}</p>
+            </div>
+  
+            <div class="card__settings">
+              <div class="card__details">
+                <div class="card__dates">
+                  <div class="card__date-deadline">
+                    <p class="card__input-deadline-wrap">
+                      <span class="card__date">${date}</span>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </article>`
-  );
-};
+      </article>`
+    );
+  }
+
+  getTemplate() {
+    return this._createTaskCardTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
