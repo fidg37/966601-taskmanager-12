@@ -1,6 +1,6 @@
 import {IterationCount} from "./constants.js";
+import {renderTask} from "./render-task-logic.js";
 import {renderElement} from "./util";
-import TaskCardView from "./View/task-card";
 import LoadButtonView from "./View/load-button.js";
 
 let handler;
@@ -12,7 +12,7 @@ const loadButtonClickEvent = (tasks, taskListContainer, button) => (evt) => {
 
   tasks
     .slice(renderedTasksCount, renderedTasksCount + IterationCount.MAX_CARD_PER_STEP)
-    .forEach((task) => renderElement({container: taskListContainer, element: new TaskCardView(task).getElement()}));
+    .forEach((task) => renderTask(taskListContainer, task));
 
   if (renderedTasksCount + IterationCount.MAX_CARD_PER_STEP >= tasks.length) {
     button.removeEventListener(`click`, handler);

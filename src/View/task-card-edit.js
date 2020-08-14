@@ -1,7 +1,7 @@
 import {COLORS} from "../constants.js";
 import {humanizeDate, isTaskRepeating, isTaskExpired, createElement} from "../util.js";
 
-export default class TaskCardAdd {
+export default class TaskCardEdit {
   constructor(task) {
     this._element = null;
     this._task = task;
