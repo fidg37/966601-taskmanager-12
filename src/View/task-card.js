@@ -6,7 +6,7 @@ export default class TaskCard {
     this._task = task;
   }
 
-  _createTaskCardTemplate({color, dueDate, description, repeating, isArchive, isFavorite}) {
+  _createTemplate({color, dueDate, description, repeating, isArchive, isFavorite}) {
     const repeatClassName = isTaskRepeating(repeating)
       ? `card--repeat`
       : ``;
@@ -72,7 +72,7 @@ export default class TaskCard {
   }
 
   getTemplate() {
-    return this._createTaskCardTemplate(this._task);
+    return this._createTemplate(this._task);
   }
 
   getElement() {

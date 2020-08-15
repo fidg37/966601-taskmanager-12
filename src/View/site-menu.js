@@ -5,7 +5,7 @@ export default class SiteMenu {
     this._element = null;
   }
 
-  _createSiteMenuTemplate() {
+  _createTemplate() {
     return (`<section class="control__btn-wrap">
       <input
         type="radio"
@@ -37,7 +37,7 @@ export default class SiteMenu {
   }
 
   getTemplate() {
-    return this._createSiteMenuTemplate();
+    return this._createTemplate();
   }
 
   getElement() {

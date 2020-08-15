@@ -6,7 +6,7 @@ export default class Filter {
     this._filters = filters;
   }
 
-  _createFilterElementsTemplate(filters) {
+  _createElementsTemplate(filters) {
     return filters.map(({name, count}, filterIndex) => (
       `<input
         type="radio"
@@ -21,14 +21,14 @@ export default class Filter {
     )).join(``);
   }
 
-  _createFilterTemplate(filters) {
+  _createTemplate(filters) {
     return (`<section class="main__filter filter container">
-      ${this._createFilterElementsTemplate(filters)}
+      ${this._createElementsTemplate(filters)}
     </section>`);
   }
 
   getTemplate() {
-    return this._createFilterTemplate(this._filters);
+    return this._createTemplate(this._filters);
   }
 
   getElement() {

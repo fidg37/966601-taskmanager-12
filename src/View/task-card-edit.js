@@ -25,7 +25,7 @@ export default class TaskCardEdit {
     ;
   }
 
-  _createTaskAddDateTemplate(dueDate) {
+  _createDateTemplate(dueDate) {
     return (`<button class="card__date-deadline-toggle" type="button">
       date: <span class="card__date-status">${dueDate !== null ? `yes` : `no`}</span>
     </button>
@@ -45,7 +45,7 @@ export default class TaskCardEdit {
         : ``}`);
   }
 
-  _createTaskAddRepeatTemplate(repeating) {
+  _createRepeatTemplate(repeating) {
     return (`<button class="card__repeat-toggle" type="button">
       repeat:<span class="card__repeat-status">${isTaskRepeating(repeating) ? `yes` : `no`}</span>
     </button>
@@ -70,7 +70,7 @@ export default class TaskCardEdit {
       }`);
   }
 
-  _createTaskAddTemplate(task = {}) {
+  _createTemplate(task = {}) {
     const {
       color = `black`,
       description = ``,
@@ -93,8 +93,8 @@ export default class TaskCardEdit {
       ? `card--repeat`
       : ``;
     const colorsTemplate = this._createColorChoiseTemplate(color);
-    const dateTemplate = this._createTaskAddDateTemplate(dueDate);
-    const repeatTemplate = this._createTaskAddRepeatTemplate(repeating);
+    const dateTemplate = this._createDateTemplate(dueDate);
+    const repeatTemplate = this._createRepeatTemplate(repeating);
 
     return (
       `<article class="card card--edit card--${color} ${repeatingClassName} ${deadlineClassName}">
@@ -143,7 +143,7 @@ export default class TaskCardEdit {
   }
 
   getTemplate() {
-    return this._createTaskAddTemplate(this._task);
+    return this._createTemplate(this._task);
   }
 
   getElement() {

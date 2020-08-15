@@ -1,3 +1,4 @@
+import {Keycodes} from "./constants.js";
 import {renderElement} from "./util.js";
 import TaskCardView from "./View/task-card.js";
 import TaskCardEditView from "./View/task-card-edit.js";
@@ -33,7 +34,7 @@ export const renderTask = (taskContainer, task) => {
   };
 
   const EscKeydownEvent = (evt) => {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
+    if (evt.keyCode === Keycodes.ESC) {
       evt.preventDefault();
 
       replaceFormToCard();

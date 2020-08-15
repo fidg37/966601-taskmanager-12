@@ -5,14 +5,14 @@ export default class Board {
     this._element = null;
   }
 
-  _createBoardTemplate() {
+  _createTemplate() {
     return (`<section class="board container">
       <div class="board__tasks"></div>
     </section>`);
   }
 
   getTemplate() {
-    return this._createBoardTemplate();
+    return this._createTemplate();
   }
 
   getElement() {

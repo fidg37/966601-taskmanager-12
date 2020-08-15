@@ -5,7 +5,7 @@ export default class Sorting {
     this._element = null;
   }
 
-  _createSortTemplate() {
+  _createTemplate() {
     return (`<div class="board__filter-list">
       <a href="#" class="board__filter" data-sort-type="default">SORT BY DEFAULT</a>
       <a href="#" class="board__filter" data-sort-type="date-up">SORT BY DATE up</a>
@@ -14,7 +14,7 @@ export default class Sorting {
   }
 
   getTemplate() {
-    return this._createSortTemplate();
+    return this._createTemplate();
   }
 
   getElement() {
