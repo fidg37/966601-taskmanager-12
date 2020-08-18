@@ -1,9 +1,6 @@
-import {createElement} from "../util.js";
+import AbstractView from "./abstract.js";
 
-export default class Board {
-  constructor() {
-    this._element = null;
-  }
+export default class Board extends AbstractView {
 
   _createTemplate() {
     return (`<section class="board container">
@@ -13,16 +10,5 @@ export default class Board {
 
   getTemplate() {
     return this._createTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

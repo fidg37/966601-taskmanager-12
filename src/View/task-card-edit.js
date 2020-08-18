@@ -1,9 +1,11 @@
+import AbstractView from "./abstract.js";
 import {COLORS} from "../constants.js";
-import {humanizeDate, isTaskRepeating, isTaskExpired, createElement} from "../util.js";
+import {humanizeDate, isTaskRepeating, isTaskExpired} from "../util.js";
 
-export default class TaskCardEdit {
+export default class TaskCardEdit extends AbstractView {
   constructor(task) {
-    this._element = null;
+    super();
+
     this._task = task;
   }
 
@@ -144,16 +146,5 @@ export default class TaskCardEdit {
 
   getTemplate() {
     return this._createTemplate(this._task);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
