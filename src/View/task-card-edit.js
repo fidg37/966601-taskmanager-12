@@ -1,6 +1,6 @@
 import AbstractView from "./abstract.js";
 import {COLORS, Keycodes} from "../constants.js";
-import {humanizeDate, isTaskRepeating, isTaskExpired} from "../util.js";
+import {humanizeDate, isTaskRepeating, isTaskExpired} from "../Utils/task.js";
 
 export default class TaskCardEdit extends AbstractView {
   constructor(task) {

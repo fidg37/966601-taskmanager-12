@@ -1,5 +1,5 @@
 import {InsertPlace} from "../constants.js";
-import {render} from "../util.js";
+import {render, replace, remove} from "../Utils/render.js";
 import BoardView from "../View/board.js";
 import SortingView from "../View/sorting.js";
 import NoTaskView from "../View/no-task.js";
@@ -34,11 +34,11 @@ export default class Board {
     const taskEditComponent = new TaskCardEditView(task);
 
     const replaceCardToForm = () => {
-      this._taskList.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
+      replace(taskEditComponent, taskComponent);
     };
 
     const replaceFormToCard = () => {
-      this._taskList.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
+      replace(taskComponent, taskEditComponent);
 
       taskEditComponent.removeFormSubmitHandler();
       taskEditComponent.removeKeydownHandler();
@@ -82,7 +82,7 @@ export default class Board {
 
       this._renderTasks(renderedTasksCount, renderedTasksCount + TASK_COUNT_PER_STEP);
       if (renderedTasksCount + TASK_COUNT_PER_STEP >= this._boardTasks.length) {
-        this._loadButtonComponent.getElement().remove();
+        remove(this._loadButtonComponent);
         this._loadButtonComponent.removeClickHandler();
       }
     };

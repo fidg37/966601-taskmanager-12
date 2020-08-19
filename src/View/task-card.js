@@ -1,5 +1,5 @@
 import AbstractView from "./abstract.js";
-import {humanizeDate, isTaskRepeating, isTaskExpired} from "../util.js";
+import {humanizeDate, isTaskRepeating, isTaskExpired} from "../Utils/task.js";
 
 export default class TaskCard extends AbstractView {
   constructor(task) {
