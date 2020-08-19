@@ -1,4 +1,4 @@
-import Abstract from "../View/abstract.js";
+import Abstract from "../view/abstract.js";
 import {IterationCount, InsertPlace} from "../constants.js";
 
 export const render = ({container, child, place = InsertPlace.BEFOREEND}) => {
@@ -10,9 +10,11 @@ export const render = ({container, child, place = InsertPlace.BEFOREEND}) => {
     child = child.getElement();
   }
 
-  return place === InsertPlace.AFTERBEGIN
-    ? container.prepend(child)
-    : container.append(child);
+  if (place === InsertPlace.AFTERBEGIN) {
+    container.prepend(child);
+  } else {
+    container.append(child);
+  }
 };
 
 export const renderTemplate = ({

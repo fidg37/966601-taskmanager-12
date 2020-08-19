@@ -1,8 +1,8 @@
 import {IterationCount} from "./constants.js";
-import {render} from "./Utils/render.js";
+import {render} from "./utils/render.js";
 import BoardPresenter from "./presenter/board.js";
-import SiteMenuView from "./View/site-menu.js";
-import FilterView from "./View/filter.js";
+import SiteMenuView from "./view/site-menu.js";
+import FilterView from "./view/filter.js";
 import {generateTask} from "./mock/task.js";
 import {generateFilter} from "./mock/filter.js";
 

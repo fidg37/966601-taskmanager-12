@@ -1,11 +1,11 @@
 import {InsertPlace} from "../constants.js";
-import {render, replace, remove} from "../Utils/render.js";
-import BoardView from "../View/board.js";
-import SortingView from "../View/sorting.js";
-import NoTaskView from "../View/no-task.js";
-import TaskCardView from "../View/task-card.js";
-import TaskCardEditView from "../View/task-card-edit.js";
-import LoadButtonView from "../View/load-button.js";
+import {render, replace, remove} from "../utils/render.js";
+import BoardView from "../view/board.js";
+import SortingView from "../view/sorting.js";
+import NoTaskView from "../view/no-task.js";
+import TaskCardView from "../view/task-card.js";
+import TaskCardEditView from "../view/task-card-edit.js";
+import LoadButtonView from "../view/load-button.js";
 
 const TASK_COUNT_PER_STEP = 8;
 
