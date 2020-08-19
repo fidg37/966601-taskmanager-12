@@ -6,6 +6,7 @@ export default class TaskCard extends AbstractView {
     super();
 
     this._task = task;
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   _createTemplate({color, dueDate, description, repeating, isArchive, isFavorite}) {
@@ -75,5 +76,16 @@ export default class TaskCard extends AbstractView {
 
   getTemplate() {
     return this._createTemplate(this._task);
+  }
+
+  _clickHandler(evt) {
+    evt.preventDefault();
+
+    this._callback.click();
+  }
+
+  setClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, this._clickHandler);
   }
 }

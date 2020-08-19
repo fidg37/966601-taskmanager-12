@@ -6,8 +6,7 @@ export const Keycodes = {
 
 export const IterationCount = {
   DEFAULT: 1,
-  CARD: 22,
-  MAX_CARD_PER_STEP: 5
+  CARD: 22
 };
 
 export const InsertPlace = {

@@ -1,6 +1,6 @@
 import {IterationCount} from "./constants.js";
-import {renderElement} from "./util.js";
-import {renderBoard} from "./render-board-logic.js";
+import {render} from "./util.js";
+import BoardPresenter from "./presenter/board.js";
 import SiteMenuView from "./View/site-menu.js";
 import FilterView from "./View/filter.js";
 
@@ -15,7 +15,9 @@ const filters = generateFilter(tasks);
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-renderElement({container: siteHeaderElement, element: new SiteMenuView().getElement()});
-renderElement({container: siteMainElement, element: new FilterView(filters).getElement()});
+render({container: siteHeaderElement, child: new SiteMenuView()});
+render({container: siteMainElement, child: new FilterView(filters)});
 
-renderBoard(siteMainElement, tasks);
+const presenter = new BoardPresenter(siteMainElement);
+
+presenter.init(tasks);

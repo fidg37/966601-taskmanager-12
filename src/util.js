@@ -1,10 +1,19 @@
+import Abstract from "./View/abstract.js";
 import {IterationCount, InsertPlace} from "./constants.js";
 
-export const renderElement = ({container, element, place = InsertPlace.BEFOREEND}) => (
-  place === InsertPlace.AFTERBEGIN
-    ? container.prepend(element)
-    : container.append(element)
-);
+export const render = ({container, child, place = InsertPlace.BEFOREEND}) => {
+  if (container instanceof Abstract) {
+    container = container.getElement();
+  }
+
+  if (child instanceof Abstract) {
+    child = child.getElement();
+  }
+
+  return place === InsertPlace.AFTERBEGIN
+    ? container.prepend(child)
+    : container.append(child);
+};
 
 export const createElement = (template) => {
   const newElement = document.createElement(`div`);
