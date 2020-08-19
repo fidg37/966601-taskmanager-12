@@ -1,10 +1,14 @@
-import {COLORS} from "../constants.js";
-import {humanizeDate, isTaskRepeating, isTaskExpired, createElement} from "../util.js";
+import AbstractView from "./abstract.js";
+import {COLORS, Keycodes} from "../constants.js";
+import {humanizeDate, isTaskRepeating, isTaskExpired} from "../utils/task.js";
 
-export default class TaskCardEdit {
+export default class TaskCardEdit extends AbstractView {
   constructor(task) {
-    this._element = null;
+    super();
+
     this._task = task;
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._escKeydownHandler = this._escKeydownHandler.bind(this);
   }
 
   _createColorChoiseTemplate(currentColor) {
@@ -146,14 +150,37 @@ export default class TaskCardEdit {
     return this._createTemplate(this._task);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+
+    this._callback.formSubmit();
   }
 
-  removeElement() {
-    this._element = null;
+  _escKeydownHandler(evt) {
+    if (evt.keyCode === Keycodes.ESC) {
+      evt.preventDefault();
+
+      this._callback.keydown();
+    }
+  }
+
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+
+    this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  setKeydownHandler(callback) {
+    this._callback.keydown = callback;
+
+    document.addEventListener(`keydown`, this._escKeydownHandler);
+  }
+
+  removeFormSubmitHandler() {
+    this.getElement().querySelector(`form`).removeEventListener(`submit`, this._formSubmitHandler);
+  }
+
+  removeKeydownHandler() {
+    document.removeEventListener(`keydown`, this._escKeydownHandler);
   }
 }
