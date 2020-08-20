@@ -1,4 +1,4 @@
-import {COLORS} from "../constants.js";
+import {COLORS, SortType} from "../constants.js";
 import {getRandomInteger, getRandomBoolean} from "../utils/common.js";
 
 const generateDescription = () => {
@@ -75,38 +75,24 @@ export const generateTask = () => {
   };
 };
 
-const getWeightForNullDate = (dateA, dateB) => {
-  if (dateA === null && dateB === null) {
-    return 0;
+const sortTaskUp = (taskA, taskB) => (
+  taskA.dueDate.getTime() - taskB.dueDate.getTime()
+);
+
+const sortTaskDown = (taskA, taskB) => (
+  taskB.dueDate.getTime() - taskA.dueDate.getTime()
+);
+
+export const getSortedTasksByDate = (tasks, sortType) => {
+  const tasksWithDueDate = tasks.filter((task) => task.dueDate);
+  const tasksWithoutDueDate = tasks.filter((task) => !task.dueDate);
+  let sortedTasks = null;
+
+  if (sortType === SortType.DATE_DOWN) {
+    sortedTasks = tasksWithDueDate.sort(sortTaskDown);
+  } else {
+    sortedTasks = tasksWithDueDate.sort(sortTaskUp);
   }
 
-  if (dateA === null) {
-    return 1;
-  }
-
-  if (dateB === null) {
-    return -1;
-  }
-
-  return null;
-};
-
-export const sortTaskUp = (taskA, taskB) => {
-  const weight = getWeightForNullDate(taskA.dueDate, taskB.dueDate);
-
-  if (weight !== null) {
-    return weight;
-  }
-
-  return taskA.dueDate.getTime() - taskB.dueDate.getTime();
-};
-
-export const sortTaskDown = (taskA, taskB) => {
-  const weight = getWeightForNullDate(taskA.dueDate, taskB.dueDate);
-
-  if (weight !== null) {
-    return weight;
-  }
-
-  return taskB.dueDate.getTime() - taskA.dueDate.getTime();
+  return sortedTasks.concat(tasksWithoutDueDate);
 };

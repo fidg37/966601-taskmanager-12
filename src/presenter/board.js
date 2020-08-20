@@ -6,7 +6,7 @@ import NoTaskView from "../view/no-task.js";
 import TaskCardView from "../view/task-card.js";
 import TaskCardEditView from "../view/task-card-edit.js";
 import LoadButtonView from "../view/load-button.js";
-import {sortTaskUp, sortTaskDown} from "../mock/task.js";
+import {getSortedTasksByDate} from "../mock/task.js";
 
 const TASK_COUNT_PER_STEP = 8;
 
@@ -39,10 +39,10 @@ export default class Board {
   _renderSortedTasks(sortType) {
     switch (sortType) {
       case SortType.DATE_UP:
-        this._renderTasksList([...this._boardTasks].sort(sortTaskUp));
+        this._renderTasksList(getSortedTasksByDate(this._boardTasks, sortType));
         break;
       case SortType.DATE_DOWN:
-        this._renderTasksList([...this._boardTasks].sort(sortTaskDown));
+        this._renderTasksList(getSortedTasksByDate(this._boardTasks, sortType));
         break;
       default:
         this._renderTasksList(this._boardTasks);
