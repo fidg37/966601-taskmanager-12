@@ -84,15 +84,20 @@ const sortTaskDown = (taskA, taskB) => (
 );
 
 export const getSortedTasksByDate = (tasks, sortType) => {
-  const tasksWithDueDate = tasks.filter((task) => task.dueDate);
-  const tasksWithoutDueDate = tasks.filter((task) => !task.dueDate);
-  let sortedTasks = null;
+  const {tasksWithDueDate, tasksWithoutDueDate} = tasks.reduce((acc, task) => {
+    if (task.dueDate) {
+      acc.tasksWithDueDate.push(task);
+    } else {
+      acc.tasksWithoutDueDate.push(task);
+    }
 
-  if (sortType === SortType.DATE_DOWN) {
-    sortedTasks = tasksWithDueDate.sort(sortTaskDown);
-  } else {
-    sortedTasks = tasksWithDueDate.sort(sortTaskUp);
-  }
+    return acc;
+  }, {tasksWithDueDate: [], tasksWithoutDueDate: []});
 
-  return sortedTasks.concat(tasksWithoutDueDate);
+  const sortedTasks = (sortType === SortType.DATE_DOWN
+    ? tasksWithDueDate.sort(sortTaskDown)
+    : tasksWithDueDate.sort(sortTaskUp)
+  ).concat(tasksWithoutDueDate);
+
+  return sortedTasks;
 };
