@@ -1,4 +1,4 @@
-import {COLORS} from "../constants.js";
+import {COLORS, SortType} from "../constants.js";
 import {getRandomInteger, getRandomBoolean} from "../utils/common.js";
 
 const generateDescription = () => {
@@ -73,4 +73,31 @@ export const generateTask = () => {
     isArchive: getRandomBoolean(),
     isFavorite: getRandomBoolean()
   };
+};
+
+const sortTaskUp = (taskA, taskB) => (
+  taskA.dueDate.getTime() - taskB.dueDate.getTime()
+);
+
+const sortTaskDown = (taskA, taskB) => (
+  taskB.dueDate.getTime() - taskA.dueDate.getTime()
+);
+
+export const getSortedTasksByDate = (tasks, sortType) => {
+  const {tasksWithDueDate, tasksWithoutDueDate} = tasks.reduce((acc, task) => {
+    if (task.dueDate) {
+      acc.tasksWithDueDate.push(task);
+    } else {
+      acc.tasksWithoutDueDate.push(task);
+    }
+
+    return acc;
+  }, {tasksWithDueDate: [], tasksWithoutDueDate: []});
+
+  const sortedTasks = (sortType === SortType.DATE_DOWN
+    ? tasksWithDueDate.sort(sortTaskDown)
+    : tasksWithDueDate.sort(sortTaskUp)
+  ).concat(tasksWithoutDueDate);
+
+  return sortedTasks;
 };

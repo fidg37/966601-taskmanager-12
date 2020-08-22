@@ -18,4 +18,3 @@ render({container: siteMainElement, child: new FilterView(filters)});
 const presenter = new BoardPresenter(siteMainElement);
 
 presenter.init(tasks);
-
