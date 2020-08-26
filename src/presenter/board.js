@@ -1,5 +1,6 @@
 import {InsertPlace, SortType} from "../constants.js";
 import {render, remove} from "../utils/render.js";
+import {updateItem} from "../utils/common.js";
 import BoardView from "../view/board.js";
 import SortingView from "../view/sorting.js";
 import NoTaskView from "../view/no-task.js";
@@ -13,6 +14,7 @@ export default class Board {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
     this._currentSortType = SortType.DEFAULT;
+    this._taskPresenter = {};
 
     this._boardComponent = new BoardView();
     this._sortingComponent = new SortingView();
@@ -20,10 +22,12 @@ export default class Board {
     this._loadButtonComponent = new LoadButtonView();
 
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
+    this._onTaskChange = this._onTaskChange.bind(this);
   }
 
   init(boardTasks) {
     this._boardTasks = [...boardTasks];
+    this._sortedBoardTasks = this._boardTasks;
 
     this._renderBoard();
     if (this._boardTasks.every((task) => task.isArchive)) {
@@ -35,16 +39,18 @@ export default class Board {
     this._renderSorting();
   }
 
+  _onTaskChange(updatedTask) {
+    this._boardTasks = updateItem(this._boardTasks, updatedTask);
+    this._sortedBoardTasks = updateItem(this._sortedBoardTasks, updatedTask);
+    this._taskPresenter[updatedTask.id].init(updatedTask);
+  }
+
   _renderSortedTasks(sortType) {
-    switch (sortType) {
-      case SortType.DATE_UP:
-        this._renderTasksList(getSortedTasksByDate(this._boardTasks, sortType));
-        break;
-      case SortType.DATE_DOWN:
-        this._renderTasksList(getSortedTasksByDate(this._boardTasks, sortType));
-        break;
-      default:
-        this._renderTasksList(this._boardTasks);
+    if (sortType !== SortType.DEFAULT) {
+      this._sortedBoardTasks = getSortedTasksByDate(this._boardTasks, sortType);
+      this._renderTasksList(this._sortedBoardTasks);
+    } else {
+      this._renderTasksList(this._boardTasks);
     }
 
     this._currentSortType = sortType;
@@ -65,7 +71,8 @@ export default class Board {
   }
 
   _renderTask(task) {
-    const taskPresenter = new TaskPresenter(this._taskList);
+    const taskPresenter = new TaskPresenter(this._taskList, this._onTaskChange);
+    this._taskPresenter[task.id] = taskPresenter;
 
     taskPresenter.init(task);
   }
@@ -82,7 +89,11 @@ export default class Board {
   }
 
   _clearTaskList() {
-    this._taskList.innerHTML = ``;
+    Object
+      .values(this._taskPresenter)
+      .forEach((presenter) => presenter.destroy());
+
+    this._taskPresenter = {};
   }
 
   _renderNoTasks() {

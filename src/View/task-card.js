@@ -6,7 +6,8 @@ export default class TaskCard extends AbstractView {
     super();
 
     this._task = task;
-    this._clickHandler = this._clickHandler.bind(this);
+    this._editClickHandler = this._editClickHandler.bind(this);
+    this._onTopButtonsClickHandler = this._onTopButtonsClickHandler.bind(this);
   }
 
   _createTemplate({color, dueDate, description, repeating, isArchive, isFavorite}) {
@@ -78,14 +79,34 @@ export default class TaskCard extends AbstractView {
     return this._createTemplate(this._task);
   }
 
-  _clickHandler(evt) {
+  _editClickHandler(evt) {
     evt.preventDefault();
 
-    this._callback.click();
+    this._callback.editClick();
   }
 
-  setClickHandler(callback) {
-    this._callback.click = callback;
-    this.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, this._clickHandler);
+  _onTopButtonsClickHandler(evt) {
+    evt.preventDefault();
+
+    if (evt.target.classList.contains(`card__btn--favorites`)) {
+      this._callback.favoriteClick(this._task);
+    } else {
+      this._callback.archiveClick(this._task);
+    }
+  }
+
+  setArchiveClickHandler(callback) {
+    this._callback.archiveClick = callback;
+    this.getElement().querySelector(`.card__btn--archive`).addEventListener(`click`, this._onTopButtonsClickHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`.card__btn--favorites`).addEventListener(`click`, this._onTopButtonsClickHandler);
+  }
+
+  setEditClickHandler(callback) {
+    this._callback.editClick = callback;
+    this.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, this._editClickHandler);
   }
 }
