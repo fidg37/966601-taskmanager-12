@@ -1,10 +1,9 @@
 import {InsertPlace, SortType} from "../constants.js";
-import {render, replace, remove} from "../utils/render.js";
+import {render, remove} from "../utils/render.js";
 import BoardView from "../view/board.js";
 import SortingView from "../view/sorting.js";
 import NoTaskView from "../view/no-task.js";
-import TaskCardView from "../view/task-card.js";
-import TaskCardEditView from "../view/task-card-edit.js";
+import TaskPresenter from "./task.js";
 import LoadButtonView from "../view/load-button.js";
 import {getSortedTasksByDate} from "../mock/task.js";
 
@@ -66,39 +65,9 @@ export default class Board {
   }
 
   _renderTask(task) {
-    const taskComponent = new TaskCardView(task);
-    const taskEditComponent = new TaskCardEditView(task);
+    const taskPresenter = new TaskPresenter(this._taskList);
 
-    const replaceCardToForm = () => {
-      replace(taskEditComponent, taskComponent);
-    };
-
-    const replaceFormToCard = () => {
-      replace(taskComponent, taskEditComponent);
-
-      taskEditComponent.removeFormSubmitHandler();
-      taskEditComponent.removeKeydownHandler();
-    };
-
-    const onEditButtonClick = () => {
-
-      replaceCardToForm();
-
-      taskEditComponent.setFormSubmitHandler(onSaveButtonClick);
-      taskEditComponent.setKeydownHandler(onFormKeydown);
-    };
-
-    const onSaveButtonClick = () => {
-      replaceFormToCard();
-    };
-
-    const onFormKeydown = () => {
-      replaceFormToCard();
-    };
-
-    taskComponent.setClickHandler(onEditButtonClick);
-
-    render({container: this._taskList, child: taskComponent});
+    taskPresenter.init(task);
   }
 
   _renderTasks(from, to, tasks) {
