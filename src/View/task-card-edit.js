@@ -19,6 +19,7 @@ export default class TaskCardEdit extends AbstractView {
     this._cardDetailsClickHandler = this._cardDetailsClickHandler.bind(this);
     this._repeatDayClickHandler = this._repeatDayClickHandler.bind(this);
     this._colorClickHandler = this._colorClickHandler.bind(this);
+    this._cardTextInputHandler = this._cardTextInputHandler.bind(this);
   }
 
   _createColorChoiseTemplate(currentColor) {
@@ -179,7 +180,7 @@ export default class TaskCardEdit extends AbstractView {
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
 
-    this.getElement().querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
+    this._element.querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
   }
 
   setKeydownHandler(callback) {
@@ -189,7 +190,7 @@ export default class TaskCardEdit extends AbstractView {
   }
 
   removeFormSubmitHandler() {
-    this.getElement().querySelector(`form`).removeEventListener(`submit`, this._formSubmitHandler);
+    this._element.querySelector(`form`).removeEventListener(`submit`, this._formSubmitHandler);
   }
 
   removeKeydownHandler() {
@@ -205,8 +206,8 @@ export default class TaskCardEdit extends AbstractView {
       return;
     }
 
-    this.getElement().classList.remove(`card--${this._editedTask.color}`);
-    this.getElement().classList.add(`card--${evt.target.control.value}`);
+    this._element.classList.remove(`card--${this._editedTask.color}`);
+    this._element.classList.add(`card--${evt.target.control.value}`);
 
     this._editedTask.color = evt.target.control.value;
   }
@@ -215,39 +216,49 @@ export default class TaskCardEdit extends AbstractView {
     if (this._isNodeNameLabel(evt)) {
       return;
     }
-
+    this._editedTask.dueDate = null;
     this._editedTask.repeating[evt.target.control.value] = !this._editedTask.repeating[evt.target.control.value];
   }
 
   _cardDetailsClickHandler(evt) {
     evt.preventDefault();
-    const element = this.getElement();
-    const dateContainer = element.querySelector(`.card__dates`);
+
+    const dateContainer = this._element.querySelector(`.card__dates`);
     dateContainer.innerHTML = ``;
 
-    element.classList.toggle(`card--repeat`);
+    this._element.classList.toggle(`card--repeat`);
 
-    renderTemplate({container: dateContainer, template: this._createDateTemplate(this._task.dueDate, !this._options.isDuedate)});
-    renderTemplate({container: dateContainer, template: this._createRepeatTemplate(this._task.repeating, this._options.isDuedate)});
+    renderTemplate({container: dateContainer, template: this._createDateTemplate(this._editedTask.dueDate, !this._options.isDuedate)});
+    renderTemplate({container: dateContainer, template: this._createRepeatTemplate(this._editedTask.repeating, this._options.isDuedate)});
 
     this._options.isDuedate = !this._options.isDuedate;
 
     this.setCardDetailsClickHandler();
   }
 
+  _cardTextInputHandler(evt) {
+    evt.preventDefault();
+
+    this._editedTask.description = evt.target.value;
+  }
+
+  setCardTextInputHandler() {
+    this._element.querySelector(`.card__text`).addEventListener(`input`, this._cardTextInputHandler);
+  }
+
   setCardDetailsClickHandler() {
-    this.getElement().querySelector(`.card__repeat-toggle`).addEventListener(`click`, this._cardDetailsClickHandler);
-    this.getElement().querySelector(`.card__date-deadline-toggle`).addEventListener(`click`, this._cardDetailsClickHandler);
+    this._element.querySelector(`.card__repeat-toggle`).addEventListener(`click`, this._cardDetailsClickHandler);
+    this._element.querySelector(`.card__date-deadline-toggle`).addEventListener(`click`, this._cardDetailsClickHandler);
     this.setRepeatDayClickHandler();
   }
 
   setRepeatDayClickHandler() {
-    if (this.getElement().querySelector(`.card__repeat-days-inner`)) {
-      this.getElement().querySelector(`.card__repeat-days-inner`).addEventListener(`click`, this._repeatDayClickHandler);
+    if (this._element.querySelector(`.card__repeat-days-inner`)) {
+      this._element.querySelector(`.card__repeat-days-inner`).addEventListener(`click`, this._repeatDayClickHandler);
     }
   }
 
   setColorsClickHandler() {
-    this.getElement().querySelector(`.card__colors-wrap`).addEventListener(`click`, this._colorClickHandler);
+    this._element.querySelector(`.card__colors-wrap`).addEventListener(`click`, this._colorClickHandler);
   }
 }

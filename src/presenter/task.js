@@ -71,6 +71,7 @@ export default class Task {
     this._taskEditComponent.setKeydownHandler(this._onFormKeydown);
     this._taskEditComponent.setCardDetailsClickHandler();
     this._taskEditComponent.setColorsClickHandler();
+    this._taskEditComponent.setCardTextInputHandler();
   }
 
   _onSaveButtonClick(task) {
