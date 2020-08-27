@@ -13,6 +13,7 @@ export default class TaskCardEdit extends AbstractView {
       isDuedate: Boolean(this._task.dueDate),
       isRepeating: isTaskRepeating(this._task.repeating)
     };
+
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._escKeydownHandler = this._escKeydownHandler.bind(this);
     this._cardDetailsClickHandler = this._cardDetailsClickHandler.bind(this);
@@ -111,47 +112,47 @@ export default class TaskCardEdit extends AbstractView {
 
     return (
       `<article class="card card--edit card--${color} ${repeatingClassName} ${deadlineClassName}">
-          <form class="card__form" method="get">
-            <div class="card__inner">
-              <div class="card__color-bar">
-                <svg width="100%" height="10">
-                  <use xlink:href="#wave"></use>
-                </svg>
-              </div>
-  
-              <div class="card__textarea-wrap">
-                <label>
-                  <textarea
-                    class="card__text"
-                    placeholder="Start typing your text here..."
-                    name="text"
-                  >${description}</textarea>
-                </label>
-              </div>
-  
-              <div class="card__settings">
-                <div class="card__details">
-                  <div class="card__dates">
-                    ${dateTemplate}
-                    ${repeatTemplate}
-                  </div>
-                </div>
-  
-                <div class="card__colors-inner">
-                  <h3 class="card__colors-title">Color</h3>
-                  <div class="card__colors-wrap">
-                    ${colorsTemplate}
-                  </div>
-                </div>
-              </div>
-  
-              <div class="card__status-btns">
-                <button class="card__save" type="submit">save</button>
-                <button class="card__delete" type="button">delete</button>
+      <form class="card__form" method="get">
+        <div class="card__inner">
+          <div class="card__color-bar">
+            <svg class="card__color-bar-wave" width="100%" height="10">
+              <use xlink:href="#wave"></use>
+            </svg>
+          </div>
+
+          <div class="card__textarea-wrap">
+            <label>
+              <textarea
+                class="card__text"
+                placeholder="Start typing your text here..."
+                name="text"
+              >${description}</textarea>
+            </label>
+          </div>
+
+          <div class="card__settings">
+            <div class="card__details">
+              <div class="card__dates">
+                ${dateTemplate}
+                ${repeatTemplate}
               </div>
             </div>
-          </form>
-        </article>`
+
+            <div class="card__colors-inner">
+              <h3 class="card__colors-title">Color</h3>
+              <div class="card__colors-wrap">
+                ${colorsTemplate}
+              </div>
+            </div>
+          </div>
+
+          <div class="card__status-btns">
+            <button class="card__save" type="submit">save</button>
+            <button class="card__delete" type="button">delete</button>
+          </div>
+        </div>
+      </form>
+    </article>`
     );
   }
 
@@ -162,7 +163,9 @@ export default class TaskCardEdit extends AbstractView {
   _formSubmitHandler(evt) {
     evt.preventDefault();
 
-    this._callback.formSubmit(this._editedTask);
+    if (Boolean(this._editedTask.dueDate) || isTaskRepeating(this._editedTask.repeating)) {
+      this._callback.formSubmit(this._editedTask);
+    }
   }
 
   _escKeydownHandler(evt) {
@@ -223,7 +226,6 @@ export default class TaskCardEdit extends AbstractView {
     dateContainer.innerHTML = ``;
 
     element.classList.toggle(`card--repeat`);
-    this._editedTask.dueDate = null;
 
     renderTemplate({container: dateContainer, template: this._createDateTemplate(this._task.dueDate, !this._options.isDuedate)});
     renderTemplate({container: dateContainer, template: this._createRepeatTemplate(this._task.repeating, this._options.isDuedate)});

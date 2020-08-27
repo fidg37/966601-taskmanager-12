@@ -1,5 +1,5 @@
 export const humanizeDate = (date) => (
-  date.toLocaleDateString(`en`, {day: `numeric`, month: `long`})
+  new Date(date).toLocaleDateString(`en`, {day: `numeric`, month: `long`})
 );
 
 export const isTaskRepeating = (repeating) => (
@@ -20,7 +20,7 @@ export const isTaskExpired = (dueDate) => {
 
   const currentDate = getCurrentDate();
 
-  return currentDate.getTime() > dueDate.getTime();
+  return currentDate.getTime() > new Date(dueDate).getTime();
 };
 
 export const isTaskExpiredToday = (dueDate) => {
