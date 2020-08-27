@@ -1,5 +1,6 @@
 import {COLORS, SortType} from "../constants.js";
 import {getRandomInteger, getRandomBoolean} from "../utils/common.js";
+import {isTaskRepeating} from "../utils/task.js";
 
 const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
@@ -16,12 +17,6 @@ const generateDescription = () => {
 };
 
 const generateDate = () => {
-  const isDate = getRandomBoolean();
-
-  if (!isDate) {
-    return null;
-  }
-
   const DATE_MAX_GAP = 7;
 
   const dateGap = getRandomInteger(DATE_MAX_GAP, -DATE_MAX_GAP);
@@ -54,18 +49,9 @@ const getRandomColor = (colors) => {
 };
 
 export const generateTask = () => {
-  const dueDate = generateDate();
-  const repeating = dueDate === null
-    ? generateRepeating()
-    : {
-      mo: false,
-      tu: false,
-      we: false,
-      th: false,
-      fr: false,
-      sa: false,
-      su: false
-    };
+  const repeating = generateRepeating();
+
+  const dueDate = isTaskRepeating(repeating) ? null : generateDate();
 
   return {
     id: generateId(),

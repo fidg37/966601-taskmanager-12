@@ -1,14 +1,23 @@
 import AbstractView from "./abstract.js";
 import {COLORS, Keycodes} from "../constants.js";
 import {humanizeDate, isTaskRepeating, isTaskExpired} from "../utils/task.js";
+import {renderTemplate} from "../utils/render.js";
 
 export default class TaskCardEdit extends AbstractView {
   constructor(task) {
     super();
 
     this._task = task;
+    this._editedTask = JSON.parse(JSON.stringify(this._task));
+    this._options = {
+      isDuedate: Boolean(this._task.dueDate),
+      isRepeating: isTaskRepeating(this._task.repeating)
+    };
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._escKeydownHandler = this._escKeydownHandler.bind(this);
+    this._cardDetailsClickHandler = this._cardDetailsClickHandler.bind(this);
+    this._repeatDayClickHandler = this._repeatDayClickHandler.bind(this);
+    this._colorClickHandler = this._colorClickHandler.bind(this);
   }
 
   _createColorChoiseTemplate(currentColor) {
@@ -29,33 +38,33 @@ export default class TaskCardEdit extends AbstractView {
     ;
   }
 
-  _createDateTemplate(dueDate) {
+  _createDateTemplate(dueDate, isDueDate) {
     return (`<button class="card__date-deadline-toggle" type="button">
-      date: <span class="card__date-status">${dueDate !== null ? `yes` : `no`}</span>
+      date: <span class="card__date-status">${isDueDate ? `yes` : `no`}</span>
     </button>
   
-    ${dueDate !== null
+    ${isDueDate
         ? `<fieldset class="card__date-deadline">
             <label class="card__input-deadline-wrap">
               <input
                 class="card__date"
                 type="text"
-                placeholder="23 September"
+                placeholder="${dueDate ? humanizeDate(dueDate) : ``}"
                 name="date"
-                value = "${humanizeDate(dueDate)}"
+                value = "${dueDate ? humanizeDate(dueDate) : ``}"
               />
             </label>
           </fieldset>`
         : ``}`);
   }
 
-  _createRepeatTemplate(repeating) {
+  _createRepeatTemplate(repeating, isRepeating) {
     return (`<button class="card__repeat-toggle" type="button">
-      repeat:<span class="card__repeat-status">${isTaskRepeating(repeating) ? `yes` : `no`}</span>
+      repeat:<span class="card__repeat-status">${isRepeating ? `yes` : `no`}</span>
     </button>
   
     ${
-      isTaskRepeating(repeating) ? `<fieldset class="card__repeat-days">
+      isRepeating ? `<fieldset class="card__repeat-days">
         <div class="card__repeat-days-inner">
           ${Object.entries(repeating).map(([day, repeat]) => `<input
             class="visually-hidden card__repeat-day-input"
@@ -65,7 +74,7 @@ export default class TaskCardEdit extends AbstractView {
             value="${day}"
             ${repeat ? `checked` : ``}
           />
-          <label class="card__repeat-day" for="repeat-mo-1">
+          <label class="card__repeat-day" for="repeat-${day}-1">
             ${day}
           </label>`).join(``)}
         </div>
@@ -97,8 +106,8 @@ export default class TaskCardEdit extends AbstractView {
       ? `card--repeat`
       : ``;
     const colorsTemplate = this._createColorChoiseTemplate(color);
-    const dateTemplate = this._createDateTemplate(dueDate);
-    const repeatTemplate = this._createRepeatTemplate(repeating);
+    const dateTemplate = this._createDateTemplate(dueDate, this._options.isDuedate);
+    const repeatTemplate = this._createRepeatTemplate(repeating, this._options.isRepeating);
 
     return (
       `<article class="card card--edit card--${color} ${repeatingClassName} ${deadlineClassName}">
@@ -153,14 +162,14 @@ export default class TaskCardEdit extends AbstractView {
   _formSubmitHandler(evt) {
     evt.preventDefault();
 
-    this._callback.formSubmit();
+    this._callback.formSubmit(this._editedTask);
   }
 
   _escKeydownHandler(evt) {
     if (evt.keyCode === Keycodes.ESC) {
       evt.preventDefault();
 
-      this._callback.keydown();
+      this._callback.keydown(this._task);
     }
   }
 
@@ -182,5 +191,61 @@ export default class TaskCardEdit extends AbstractView {
 
   removeKeydownHandler() {
     document.removeEventListener(`keydown`, this._escKeydownHandler);
+  }
+
+  _isNodeNameLabel(evt) {
+    return evt.target.nodeName !== `LABEL`;
+  }
+
+  _colorClickHandler(evt) {
+    if (this._isNodeNameLabel(evt)) {
+      return;
+    }
+
+    this.getElement().classList.remove(`card--${this._editedTask.color}`);
+    this.getElement().classList.add(`card--${evt.target.control.value}`);
+
+    this._editedTask.color = evt.target.control.value;
+  }
+
+  _repeatDayClickHandler(evt) {
+    if (this._isNodeNameLabel(evt)) {
+      return;
+    }
+
+    this._editedTask.repeating[evt.target.control.value] = !this._editedTask.repeating[evt.target.control.value];
+  }
+
+  _cardDetailsClickHandler(evt) {
+    evt.preventDefault();
+    const element = this.getElement();
+    const dateContainer = element.querySelector(`.card__dates`);
+    dateContainer.innerHTML = ``;
+
+    element.classList.toggle(`card--repeat`);
+    this._editedTask.dueDate = null;
+
+    renderTemplate({container: dateContainer, template: this._createDateTemplate(this._task.dueDate, !this._options.isDuedate)});
+    renderTemplate({container: dateContainer, template: this._createRepeatTemplate(this._task.repeating, this._options.isDuedate)});
+
+    this._options.isDuedate = !this._options.isDuedate;
+
+    this.setCardDetailsClickHandler();
+  }
+
+  setCardDetailsClickHandler() {
+    this.getElement().querySelector(`.card__repeat-toggle`).addEventListener(`click`, this._cardDetailsClickHandler);
+    this.getElement().querySelector(`.card__date-deadline-toggle`).addEventListener(`click`, this._cardDetailsClickHandler);
+    this.setRepeatDayClickHandler();
+  }
+
+  setRepeatDayClickHandler() {
+    if (this.getElement().querySelector(`.card__repeat-days-inner`)) {
+      this.getElement().querySelector(`.card__repeat-days-inner`).addEventListener(`click`, this._repeatDayClickHandler);
+    }
+  }
+
+  setColorsClickHandler() {
+    this.getElement().querySelector(`.card__colors-wrap`).addEventListener(`click`, this._colorClickHandler);
   }
 }

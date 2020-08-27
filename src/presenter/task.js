@@ -69,14 +69,18 @@ export default class Task {
 
     this._taskEditComponent.setFormSubmitHandler(this._onSaveButtonClick);
     this._taskEditComponent.setKeydownHandler(this._onFormKeydown);
+    this._taskEditComponent.setCardDetailsClickHandler();
+    this._taskEditComponent.setColorsClickHandler();
   }
 
-  _onSaveButtonClick() {
+  _onSaveButtonClick(task) {
     this._replaceFormToCard();
+    this._changeData(task);
   }
 
-  _onFormKeydown() {
+  _onFormKeydown(task) {
     this._replaceFormToCard();
+    this._changeData(task);
   }
 
   _onFavoriteClick(task) {
