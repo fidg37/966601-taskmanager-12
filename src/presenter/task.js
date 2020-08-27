@@ -2,13 +2,20 @@ import TaskCardView from "../view/task-card.js";
 import TaskCardEditView from "../view/task-card-edit.js";
 import {render, replace, remove} from "../utils/render.js";
 
+const Mode = {
+  DEFAULT: `DEFAULT`,
+  EDITING: `EDITING`
+};
+
 export default class Task {
-  constructor(taskContainer, changeData) {
+  constructor(taskContainer, changeData, changeMode) {
     this._taskContainer = taskContainer;
     this._changeData = changeData;
+    this._changeMode = changeMode;
 
     this._taskComponent = null;
     this._taskEditComponent = null;
+    this._mode = Mode.DEFAULT;
 
     this._onEditButtonClick = this._onEditButtonClick.bind(this);
     this._onSaveButtonClick = this._onSaveButtonClick.bind(this);
@@ -35,11 +42,11 @@ export default class Task {
       return;
     }
 
-    if (this._taskContainer.contains(prevTaskComponent.getElement())) {
+    if (this._mode === Mode.DEFAULT) {
       replace(this._taskComponent, prevTaskComponent);
     }
 
-    if (this._taskContainer.contains(prevTaskEditComponent.getElement())) {
+    if (this._mode === Mode.EDITING) {
       replace(this._taskComponent, prevTaskEditComponent);
     }
 
@@ -52,8 +59,16 @@ export default class Task {
     remove(this._taskEditComponent);
   }
 
+  resetView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._replaceFormToCard();
+    }
+  }
+
   _replaceCardToForm() {
     replace(this._taskEditComponent, this._taskComponent);
+    this._changeMode();
+    this._mode = Mode.EDITING;
   }
 
   _replaceFormToCard() {
@@ -61,6 +76,7 @@ export default class Task {
 
     this._taskEditComponent.removeFormSubmitHandler();
     this._taskEditComponent.removeKeydownHandler();
+    this._mode = Mode.DEFAULT;
   }
 
   _onEditButtonClick() {
