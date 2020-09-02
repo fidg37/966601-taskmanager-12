@@ -2,13 +2,14 @@ import AbstractView from "./abstract.js";
 import {COLORS, Keycodes} from "../constants.js";
 import {humanizeDate, isTaskRepeating, isTaskExpired} from "../utils/task.js";
 import {renderTemplate} from "../utils/render.js";
+import cloneDeep from "lodash.clonedeep";
 
 export default class TaskCardEdit extends AbstractView {
   constructor(task) {
     super();
 
     this._task = task;
-    this._editedTask = JSON.parse(JSON.stringify(this._task));
+    this._editedTask = cloneDeep(task);
     this._options = {
       isDuedate: Boolean(this._task.dueDate),
       isRepeating: isTaskRepeating(this._task.repeating)
