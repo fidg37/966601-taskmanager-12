@@ -15,12 +15,14 @@ export default class TaskCardEdit extends AbstractView {
       isRepeating: isTaskRepeating(this._task.repeating)
     };
 
-    this._formSubmitHandler = this._formSubmitHandler.bind(this);
-    this._escKeydownHandler = this._escKeydownHandler.bind(this);
-    this._cardDetailsClickHandler = this._cardDetailsClickHandler.bind(this);
-    this._repeatDayClickHandler = this._repeatDayClickHandler.bind(this);
-    this._colorClickHandler = this._colorClickHandler.bind(this);
-    this._cardTextInputHandler = this._cardTextInputHandler.bind(this);
+    this._handlers = {
+      formSubmit: this._formSubmitHandler.bind(this),
+      escKeydown: this._escKeydownHandler.bind(this),
+      cardDetailsClick: this._cardDetailsClickHandler.bind(this),
+      repeatDayClick: this._repeatDayClickHandler.bind(this),
+      colorClick: this._colorClickHandler.bind(this),
+      cardTextInput: this._cardTextInputHandler.bind(this)
+    };
   }
 
   _createColorChoiseTemplate(currentColor) {
@@ -165,9 +167,16 @@ export default class TaskCardEdit extends AbstractView {
   _formSubmitHandler(evt) {
     evt.preventDefault();
 
-    if (Boolean(this._editedTask.dueDate) || isTaskRepeating(this._editedTask.repeating)) {
+    if (this._isCardDetailsExist()) {
       this._callback.formSubmit(this._editedTask);
     }
+  }
+
+  _isCardDetailsExist() {
+    return Boolean(this._editedTask.dueDate) || isTaskRepeating(this._editedTask.repeating)
+      ? true
+      : false
+    ;
   }
 
   _escKeydownHandler(evt) {
@@ -181,21 +190,21 @@ export default class TaskCardEdit extends AbstractView {
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
 
-    this._element.querySelector(`form`).addEventListener(`submit`, this._formSubmitHandler);
+    this._element.querySelector(`form`).addEventListener(`submit`, this._handlers.formSubmit);
   }
 
   setKeydownHandler(callback) {
     this._callback.keydown = callback;
 
-    document.addEventListener(`keydown`, this._escKeydownHandler);
+    document.addEventListener(`keydown`, this._handlers.escKeydown);
   }
 
   removeFormSubmitHandler() {
-    this._element.querySelector(`form`).removeEventListener(`submit`, this._formSubmitHandler);
+    this._element.querySelector(`form`).removeEventListener(`submit`, this._handlers.formSubmit);
   }
 
   removeKeydownHandler() {
-    document.removeEventListener(`keydown`, this._escKeydownHandler);
+    document.removeEventListener(`keydown`, this._handlers.escKeydown);
   }
 
   _isNodeNameLabel(evt) {
@@ -244,22 +253,22 @@ export default class TaskCardEdit extends AbstractView {
   }
 
   setCardTextInputHandler() {
-    this._element.querySelector(`.card__text`).addEventListener(`input`, this._cardTextInputHandler);
+    this._element.querySelector(`.card__text`).addEventListener(`input`, this._handlers.cardTextInput);
   }
 
   setCardDetailsClickHandler() {
-    this._element.querySelector(`.card__repeat-toggle`).addEventListener(`click`, this._cardDetailsClickHandler);
-    this._element.querySelector(`.card__date-deadline-toggle`).addEventListener(`click`, this._cardDetailsClickHandler);
+    this._element.querySelector(`.card__repeat-toggle`).addEventListener(`click`, this._handlers.cardDetailsClick);
+    this._element.querySelector(`.card__date-deadline-toggle`).addEventListener(`click`, this._handlers.cardDetailsClick);
     this.setRepeatDayClickHandler();
   }
 
   setRepeatDayClickHandler() {
     if (this._element.querySelector(`.card__repeat-days-inner`)) {
-      this._element.querySelector(`.card__repeat-days-inner`).addEventListener(`click`, this._repeatDayClickHandler);
+      this._element.querySelector(`.card__repeat-days-inner`).addEventListener(`click`, this._handlers.repeatDayClick);
     }
   }
 
   setColorsClickHandler() {
-    this._element.querySelector(`.card__colors-wrap`).addEventListener(`click`, this._colorClickHandler);
+    this._element.querySelector(`.card__colors-wrap`).addEventListener(`click`, this._handlers.colorClick);
   }
 }

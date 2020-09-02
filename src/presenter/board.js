@@ -21,9 +21,11 @@ export default class Board {
     this._noTaskComponent = new NoTaskView();
     this._loadButtonComponent = new LoadButtonView();
 
-    this._onSortTypeChange = this._onSortTypeChange.bind(this);
-    this._onTaskChange = this._onTaskChange.bind(this);
-    this._handleModeChange = this._handleModeChange.bind(this);
+    this._handlers = {
+      sortTypeChange: this._sortTypeChangeHandler.bind(this),
+      taskChange: this._taskChangeHandler.bind(this),
+      handleModeChange: this._handleModeChangeHandler.bind(this)
+    };
   }
 
   init(boardTasks) {
@@ -40,13 +42,13 @@ export default class Board {
     this._renderSorting();
   }
 
-  _handleModeChange() {
+  _handleModeChangeHandler() {
     Object
       .values(this._taskPresenter)
       .forEach((presenter) => presenter.resetView());
   }
 
-  _onTaskChange(updatedTask) {
+  _taskChangeHandler(updatedTask) {
     this._boardTasks = updateItem(this._boardTasks, updatedTask);
     this._sortedBoardTasks = updateItem(this._sortedBoardTasks, updatedTask);
     this._taskPresenter[updatedTask.id].init(updatedTask);
@@ -63,7 +65,7 @@ export default class Board {
     this._currentSortType = sortType;
   }
 
-  _onSortTypeChange(sortType) {
+  _sortTypeChangeHandler(sortType) {
     if (this._currentSortType === sortType) {
       return;
     }
@@ -74,11 +76,11 @@ export default class Board {
 
   _renderSorting() {
     render({container: this._boardComponent.getElement(), child: this._sortingComponent, place: InsertPlace.AFTERBEGIN});
-    this._sortingComponent.setSortTypeChangeHandler(this._onSortTypeChange);
+    this._sortingComponent.setSortTypeChangeHandler(this._handlers.sortTypeChange);
   }
 
   _renderTask(task) {
-    const taskPresenter = new TaskPresenter(this._taskList, this._onTaskChange, this._handleModeChange);
+    const taskPresenter = new TaskPresenter(this._taskList, this._handlers.taskChange, this._handlers.handleModeChange);
     this._taskPresenter[task.id] = taskPresenter;
 
     taskPresenter.init(task);
