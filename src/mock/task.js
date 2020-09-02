@@ -1,8 +1,7 @@
 import {COLORS, SortType} from "../constants.js";
 import {getRandomInteger, getRandomBoolean} from "../utils/common.js";
 import {isTaskRepeating} from "../utils/task.js";
-
-const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+import lodashUniqueid from "lodash.uniqueid";
 
 const generateDescription = () => {
   const descriptions = [
@@ -54,7 +53,7 @@ export const generateTask = () => {
   const dueDate = isTaskRepeating(repeating) ? null : generateDate();
 
   return {
-    id: generateId(),
+    id: lodashUniqueid(),
     description: generateDescription(),
     dueDate,
     repeating,
