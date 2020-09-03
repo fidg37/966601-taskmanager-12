@@ -5,6 +5,7 @@ import {renderTemplate} from "../utils/render.js";
 import cloneDeep from "lodash.clonedeep";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+import flatpickr from "flatpickr";
 
 export default class TaskCardEdit extends AbstractView {
   constructor(task) {
@@ -12,8 +13,9 @@ export default class TaskCardEdit extends AbstractView {
 
     this._task = task;
     this._editedTask = cloneDeep(task);
+    this._datepicker = null;
     this._options = {
-      isDuedate: Boolean(this._task.dueDate),
+      isDuedate: this._task.dueDate,
       isRepeating: isTaskRepeating(this._task.repeating)
     };
 
@@ -23,8 +25,11 @@ export default class TaskCardEdit extends AbstractView {
       cardDetailsClick: this._cardDetailsClickHandler.bind(this),
       repeatDayClick: this._repeatDayClickHandler.bind(this),
       colorClick: this._colorClickHandler.bind(this),
-      cardTextInput: this._cardTextInputHandler.bind(this)
+      cardTextInput: this._cardTextInputHandler.bind(this),
+      dueDateChange: this._dueDateChangeHandler.bind(this)
     };
+
+    this._setDatepicker();
   }
 
   _createColorChoiseTemplate(currentColor) {
@@ -243,7 +248,14 @@ export default class TaskCardEdit extends AbstractView {
     renderTemplate({container: dateContainer, template: this._createDateTemplate(this._editedTask.dueDate, !this._options.isDuedate)});
     renderTemplate({container: dateContainer, template: this._createRepeatTemplate(this._editedTask.repeating, this._options.isDuedate)});
 
-    this._options.isDuedate = !this._options.isDuedate;
+    if (this.getElement().querySelector(`.card__date`)) {
+      this._options.isDuedate = new Date();
+
+      this._resetRepeating();
+      this._setDatepicker();
+    } else {
+      this._options.isDuedate = null;
+    }
 
     this.setCardDetailsClickHandler();
   }
@@ -272,5 +284,34 @@ export default class TaskCardEdit extends AbstractView {
 
   setColorsClickHandler() {
     this._element.querySelector(`.card__colors-wrap`).addEventListener(`click`, this._handlers.colorClick);
+  }
+
+  _dueDateChangeHandler(selectedDates) {
+    this._options.isDueDate = selectedDates[0];
+    this._editedTask.dueDate = this._options.isDueDate;
+  }
+
+  _resetRepeating() {
+    Object.keys(this._editedTask.repeating).forEach((day) => {
+      this._editedTask.repeating[day] = false;
+    });
+  }
+
+  _setDatepicker() {
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
+
+    if (this._options.isDuedate) {
+      this._datepicker = flatpickr(
+          this.getElement().querySelector(`.card__date`),
+          {
+            dateFormat: `j F`,
+            defaultDate: this._options.isDuedate,
+            onChange: this._handlers.dueDateChange
+          }
+      );
+    }
   }
 }
