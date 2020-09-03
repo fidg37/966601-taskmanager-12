@@ -4,6 +4,8 @@ import {humanizeDate, isTaskRepeating, isTaskExpired} from "../utils/task.js";
 import {renderTemplate} from "../utils/render.js";
 import cloneDeep from "lodash.clonedeep";
 
+import "../../node_modules/flatpickr/dist/flatpickr.min.css";
+
 export default class TaskCardEdit extends AbstractView {
   constructor(task) {
     super();
