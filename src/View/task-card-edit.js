@@ -1,6 +1,6 @@
 import AbstractView from "./abstract.js";
 import {COLORS, Keycodes} from "../constants.js";
-import {humanizeDate, isTaskRepeating, isTaskExpired} from "../utils/task.js";
+import {formatDate, isTaskRepeating, isTaskExpired} from "../utils/task.js";
 import {renderTemplate} from "../utils/render.js";
 import cloneDeep from "lodash.clonedeep";
 
@@ -61,9 +61,9 @@ export default class TaskCardEdit extends AbstractView {
               <input
                 class="card__date"
                 type="text"
-                placeholder="${dueDate ? humanizeDate(dueDate) : ``}"
+                placeholder="${dueDate ? formatDate(dueDate) : ``}"
                 name="date"
-                value = "${dueDate ? humanizeDate(dueDate) : ``}"
+                value = "${dueDate ? formatDate(dueDate) : ``}"
               />
             </label>
           </fieldset>`

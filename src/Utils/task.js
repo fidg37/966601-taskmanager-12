@@ -1,6 +1,12 @@
-export const humanizeDate = (date) => (
-  new Date(date).toLocaleDateString(`en`, {day: `numeric`, month: `long`})
-);
+import moment from "moment";
+
+export const formatDate = (date) => {
+  if (!(date instanceof Date)) {
+    return ``;
+  }
+
+  return moment(date).format(`D MMMM`);
+};
 
 export const isTaskRepeating = (repeating) => (
   Object.values(repeating).some(Boolean)
