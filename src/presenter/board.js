@@ -1,10 +1,10 @@
 import {InsertPlace, SortType} from "../constants.js";
-import {render, replace, remove} from "../utils/render.js";
+import {render, remove} from "../utils/render.js";
+import {updateItem} from "../utils/common.js";
 import BoardView from "../view/board.js";
 import SortingView from "../view/sorting.js";
 import NoTaskView from "../view/no-task.js";
-import TaskCardView from "../view/task-card.js";
-import TaskCardEditView from "../view/task-card-edit.js";
+import TaskPresenter from "./task.js";
 import LoadButtonView from "../view/load-button.js";
 import {getSortedTasksByDate} from "../mock/task.js";
 
@@ -14,17 +14,23 @@ export default class Board {
   constructor(boardContainer) {
     this._boardContainer = boardContainer;
     this._currentSortType = SortType.DEFAULT;
+    this._taskPresenter = {};
 
     this._boardComponent = new BoardView();
     this._sortingComponent = new SortingView();
     this._noTaskComponent = new NoTaskView();
     this._loadButtonComponent = new LoadButtonView();
 
-    this._onSortTypeChange = this._onSortTypeChange.bind(this);
+    this._handlers = {
+      sortTypeChange: this._sortTypeChangeHandler.bind(this),
+      taskChange: this._taskChangeHandler.bind(this),
+      handleModeChange: this._handleModeChangeHandler.bind(this)
+    };
   }
 
   init(boardTasks) {
     this._boardTasks = [...boardTasks];
+    this._sortedBoardTasks = this._boardTasks;
 
     this._renderBoard();
     if (this._boardTasks.every((task) => task.isArchive)) {
@@ -36,22 +42,30 @@ export default class Board {
     this._renderSorting();
   }
 
+  _handleModeChangeHandler() {
+    Object
+      .values(this._taskPresenter)
+      .forEach((presenter) => presenter.resetView());
+  }
+
+  _taskChangeHandler(updatedTask) {
+    this._boardTasks = updateItem(this._boardTasks, updatedTask);
+    this._sortedBoardTasks = updateItem(this._sortedBoardTasks, updatedTask);
+    this._taskPresenter[updatedTask.id].init(updatedTask);
+  }
+
   _renderSortedTasks(sortType) {
-    switch (sortType) {
-      case SortType.DATE_UP:
-        this._renderTasksList(getSortedTasksByDate(this._boardTasks, sortType));
-        break;
-      case SortType.DATE_DOWN:
-        this._renderTasksList(getSortedTasksByDate(this._boardTasks, sortType));
-        break;
-      default:
-        this._renderTasksList(this._boardTasks);
+    if (sortType !== SortType.DEFAULT) {
+      this._sortedBoardTasks = getSortedTasksByDate(this._boardTasks, sortType);
+      this._renderTasksList(this._sortedBoardTasks);
+    } else {
+      this._renderTasksList(this._boardTasks);
     }
 
     this._currentSortType = sortType;
   }
 
-  _onSortTypeChange(sortType) {
+  _sortTypeChangeHandler(sortType) {
     if (this._currentSortType === sortType) {
       return;
     }
@@ -62,43 +76,14 @@ export default class Board {
 
   _renderSorting() {
     render({container: this._boardComponent.getElement(), child: this._sortingComponent, place: InsertPlace.AFTERBEGIN});
-    this._sortingComponent.setSortTypeChangeHandler(this._onSortTypeChange);
+    this._sortingComponent.setSortTypeChangeHandler(this._handlers.sortTypeChange);
   }
 
   _renderTask(task) {
-    const taskComponent = new TaskCardView(task);
-    const taskEditComponent = new TaskCardEditView(task);
+    const taskPresenter = new TaskPresenter(this._taskList, this._handlers.taskChange, this._handlers.handleModeChange);
+    this._taskPresenter[task.id] = taskPresenter;
 
-    const replaceCardToForm = () => {
-      replace(taskEditComponent, taskComponent);
-    };
-
-    const replaceFormToCard = () => {
-      replace(taskComponent, taskEditComponent);
-
-      taskEditComponent.removeFormSubmitHandler();
-      taskEditComponent.removeKeydownHandler();
-    };
-
-    const onEditButtonClick = () => {
-
-      replaceCardToForm();
-
-      taskEditComponent.setFormSubmitHandler(onSaveButtonClick);
-      taskEditComponent.setKeydownHandler(onFormKeydown);
-    };
-
-    const onSaveButtonClick = () => {
-      replaceFormToCard();
-    };
-
-    const onFormKeydown = () => {
-      replaceFormToCard();
-    };
-
-    taskComponent.setClickHandler(onEditButtonClick);
-
-    render({container: this._taskList, child: taskComponent});
+    taskPresenter.init(task);
   }
 
   _renderTasks(from, to, tasks) {
@@ -113,7 +98,11 @@ export default class Board {
   }
 
   _clearTaskList() {
-    this._taskList.innerHTML = ``;
+    Object
+      .values(this._taskPresenter)
+      .forEach((presenter) => presenter.destroy());
+
+    this._taskPresenter = {};
   }
 
   _renderNoTasks() {
