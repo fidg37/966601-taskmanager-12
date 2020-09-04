@@ -44,10 +44,7 @@ export default class Task {
   }
 
   _isFirstInit() {
-    return this._prevTaskComponent === null || this._prevTaskEditComponent === null
-      ? true
-      : false
-    ;
+    return this._prevTaskComponent === null || this._prevTaskEditComponent === null;
   }
 
   _savePrevTaskComponents() {
