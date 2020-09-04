@@ -1,5 +1,5 @@
 import AbstractView from "./abstract.js";
-import {humanizeDate, isTaskRepeating, isTaskExpired} from "../utils/task.js";
+import {formatDate, isTaskRepeating, isTaskExpired} from "../utils/task.js";
 
 export default class TaskCard extends AbstractView {
   constructor(task) {
@@ -30,7 +30,7 @@ export default class TaskCard extends AbstractView {
       ? `card--deadline`
       : ``;
 
-    const date = dueDate !== null ? humanizeDate(dueDate) : ``;
+    const date = dueDate !== null ? formatDate(dueDate) : ``;
 
     return (
       `<article class="card card--${color} ${deadlineClassName} ${repeatClassName}">
