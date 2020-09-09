@@ -11,8 +11,9 @@ import {getSortedTasksByDate} from "../mock/task.js";
 const TASK_COUNT_PER_STEP = 8;
 
 export default class Board {
-  constructor(boardContainer) {
+  constructor(boardContainer, tasksModel) {
     this._boardContainer = boardContainer;
+    this._tasksModel = tasksModel;
     this._currentSortType = SortType.DEFAULT;
     this._taskPresenter = {};
 
@@ -40,6 +41,10 @@ export default class Board {
 
     this._renderTasksList(this._boardTasks);
     this._renderSorting();
+  }
+
+  _getTasks() {
+    return this._tasksModel.getTasks();
   }
 
   _handleModeChangeHandler() {
