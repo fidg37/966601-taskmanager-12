@@ -15,6 +15,7 @@ export default class Board {
     this._boardContainer = boardContainer;
     this._tasksModel = tasksModel;
     this._currentSortType = SortType.DEFAULT;
+    this._renderedTaskCount = TASK_COUNT_PER_STEP;
     this._taskPresenter = {};
 
     this._boardComponent = new BoardView();
@@ -29,22 +30,16 @@ export default class Board {
     };
   }
 
-  init(boardTasks) {
-    this._boardTasks = [...boardTasks];
-    this._sortedBoardTasks = this._boardTasks;
-
+  init() {
     this._renderBoard();
-    if (this._boardTasks.every((task) => task.isArchive)) {
-      this._renderNoTasks();
-      return;
-    }
-
-    this._renderTasksList(this._boardTasks);
-    this._renderSorting();
   }
 
   _getTasks() {
-    return this._tasksModel.getTasks();
+    if (this._currentSortType !== SortType.DEFAULT) {
+      return getSortedTasksByDate(this._tasksModel.getTasks(), this._currentSortType);
+    } else {
+      return this._tasksModel.getTasks();
+    }
   }
 
   _handleModeChangeHandler() {
@@ -59,24 +54,15 @@ export default class Board {
     this._taskPresenter[updatedTask.id].init(updatedTask);
   }
 
-  _renderSortedTasks(sortType) {
-    if (sortType !== SortType.DEFAULT) {
-      this._sortedBoardTasks = getSortedTasksByDate(this._boardTasks, sortType);
-      this._renderTasksList(this._sortedBoardTasks);
-    } else {
-      this._renderTasksList(this._boardTasks);
-    }
-
-    this._currentSortType = sortType;
-  }
-
   _sortTypeChangeHandler(sortType) {
     if (this._currentSortType === sortType) {
       return;
     }
 
+    this._currentSortType = sortType;
+
     this._clearTaskList();
-    this._renderSortedTasks(sortType);
+    this._renderTasksList();
   }
 
   _renderSorting() {
@@ -91,15 +77,16 @@ export default class Board {
     taskPresenter.init(task);
   }
 
-  _renderTasks(from, to, tasks) {
-    tasks
-      .slice(from, to)
-      .forEach((task) => this._renderTask(task));
+  _renderTasks(tasks) {
+    tasks.forEach((task) => this._renderTask(task));
   }
 
-  _renderTasksList(tasks) {
-    this._renderTasks(0, TASK_COUNT_PER_STEP, tasks);
-    this._renderLoadButton(tasks);
+  _renderTasksList() {
+    const taskCount = this._getTasks().length;
+    const tasks = this._getTasks().slice(0, Math.min(taskCount, TASK_COUNT_PER_STEP));
+
+    this._renderTasks(tasks);
+    this._renderLoadButton(taskCount);
   }
 
   _clearTaskList() {
@@ -114,23 +101,27 @@ export default class Board {
     render({container: this._boardComponent, child: this._noTaskComponent, place: InsertPlace.AFTERBEGIN});
   }
 
-  _renderLoadButton(tasks) {
-    if (tasks.length < TASK_COUNT_PER_STEP) {
+  _renderLoadButton(taskCount) {
+    if (taskCount < TASK_COUNT_PER_STEP) {
       return;
     }
 
+    this._renderedTaskCount = TASK_COUNT_PER_STEP;
+
     const onLoadButtonClick = () => {
+      const newRenderedTaskCount = Math.min(taskCount, this._renderedTaskCount + TASK_COUNT_PER_STEP);
+      const tasks = this._getTasks().slice(this._renderedTaskCount, newRenderedTaskCount);
 
-      const renderedTasksCount = this._taskList.querySelectorAll(`.card__form`).length;
+      this._renderTasks(tasks);
+      this._renderedTaskCount = newRenderedTaskCount;
 
-      this._renderTasks(renderedTasksCount, renderedTasksCount + TASK_COUNT_PER_STEP, tasks);
-      if (renderedTasksCount + TASK_COUNT_PER_STEP >= this._boardTasks.length) {
+      if (this._renderedTaskCount >= taskCount) {
         remove(this._loadButtonComponent);
         this._loadButtonComponent.removeClickHandler();
       }
     };
 
-    if (this._boardTasks.length > TASK_COUNT_PER_STEP) {
+    if (taskCount > TASK_COUNT_PER_STEP) {
       this._loadButtonComponent.setClickHandler(onLoadButtonClick);
       render({container: this._boardComponent, child: this._loadButtonComponent});
     }
@@ -140,5 +131,13 @@ export default class Board {
     this._taskList = this._boardComponent.getElement().querySelector(`.board__tasks`);
 
     render({container: this._boardContainer, child: this._boardComponent});
+
+    if (this._getTasks().every((task) => task.isArchive)) {
+      this._renderNoTasks();
+      return;
+    }
+
+    this._renderTasksList();
+    this._renderSorting();
   }
 }
