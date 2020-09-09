@@ -1,6 +1,7 @@
 import TaskCardView from "../view/task-card.js";
 import TaskCardEditView from "../view/task-card-edit.js";
 import {render, replace, remove} from "../utils/render.js";
+import {UpdateType, UserAction} from "../constants.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -111,7 +112,7 @@ export default class Task {
 
   _saveButtonClickHandler(task) {
     this._replaceFormToCard();
-    this._changeData(task);
+    this._changeData(UserAction.UPDATE_TASK, UpdateType.PATCH, task);
   }
 
   _formKeydownHandler(task) {
@@ -120,13 +121,13 @@ export default class Task {
   }
 
   _favoriteClickHandler(task) {
-    this._changeData(Object.assign({}, task, {
+    this._changeData(UserAction.UPDATE_TASK, UpdateType.MINOR, Object.assign({}, task, {
       isFavorite: !this._task.isFavorite
     }));
   }
 
   _archiveClickHandler(task) {
-    this._changeData(Object.assign({}, task, {
+    this._changeData(UserAction.UPDATE_TASK, UpdateType.MINOR, Object.assign({}, task, {
       isArchive: !this._task.isArchive
     }));
   }
