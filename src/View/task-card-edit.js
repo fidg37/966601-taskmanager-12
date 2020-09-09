@@ -26,7 +26,8 @@ export default class TaskCardEdit extends AbstractView {
       repeatDayClick: this._repeatDayClickHandler.bind(this),
       colorClick: this._colorClickHandler.bind(this),
       cardTextInput: this._cardTextInputHandler.bind(this),
-      dueDateChange: this._dueDateChangeHandler.bind(this)
+      dueDateChange: this._dueDateChangeHandler.bind(this),
+      deleteClick: this._deleteClickHandler.bind(this)
     };
 
     this._setDatepicker();
@@ -313,5 +314,17 @@ export default class TaskCardEdit extends AbstractView {
           }
       );
     }
+  }
+
+  _deleteClickHandler(evt) {
+    evt.preventDefault();
+
+    this._callback.deleteClick(this._task);
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+
+    this.getElement().querySelector(`.card__delete`).addEventListener(`click`, this._handlers.deleteClick);
   }
 }

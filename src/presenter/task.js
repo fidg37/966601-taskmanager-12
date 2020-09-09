@@ -23,7 +23,8 @@ export default class Task {
       saveButtonClick: this._saveButtonClickHandler.bind(this),
       formKeydown: this._formKeydownHandler.bind(this),
       favoriteClick: this._favoriteClickHandler.bind(this),
-      archiveClick: this._archiveClickHandler.bind(this)
+      archiveClick: this._archiveClickHandler.bind(this),
+      deleteClick: this._deleteClickHandler.bind(this)
     };
   }
 
@@ -108,11 +109,18 @@ export default class Task {
     this._taskEditComponent.setCardDetailsClickHandler();
     this._taskEditComponent.setColorsClickHandler();
     this._taskEditComponent.setCardTextInputHandler();
+    this._taskEditComponent.setDeleteClickHandler(this._handlers.deleteClick);
+  }
+
+  _isDateEqual(defaultTask, updatedTask) {
+    return defaultTask.dueDate === updatedTask.dueDate;
   }
 
   _saveButtonClickHandler(task) {
+    const isMinorUpdate = !this._isDateEqual(this._task, task);
+
     this._replaceFormToCard();
-    this._changeData(UserAction.UPDATE_TASK, UpdateType.PATCH, task);
+    this._changeData(UserAction.UPDATE_TASK, isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH, task);
   }
 
   _formKeydownHandler(task) {
@@ -130,5 +138,9 @@ export default class Task {
     this._changeData(UserAction.UPDATE_TASK, UpdateType.MINOR, Object.assign({}, task, {
       isArchive: !this._task.isArchive
     }));
+  }
+
+  _deleteClickHandler(task) {
+    this._changeData(UserAction.DELETE_TASK, UpdateType.MINOR, task);
   }
 }

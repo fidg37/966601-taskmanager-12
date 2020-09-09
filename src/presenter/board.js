@@ -126,7 +126,7 @@ export default class Board {
     this._loadButtonComponent = new LoadButtonView();
 
 
-    if (taskCount < TASK_COUNT_PER_STEP) {
+    if (taskCount < TASK_COUNT_PER_STEP || this._renderedTaskCount === taskCount) {
       return;
     }
 
