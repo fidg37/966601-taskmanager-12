@@ -11,8 +11,26 @@ export default class TaskCardEdit extends AbstractView {
   constructor(task) {
     super();
 
-    this._task = task;
-    this._editedTask = cloneDeep(task);
+    this._emptyTask = {
+      id: null,
+      description: ``,
+      dueDate: null,
+      repeating: {
+        mo: false,
+        tu: false,
+        we: false,
+        th: false,
+        fr: false,
+        sa: false,
+        su: false
+      },
+      color: `black`,
+      isArchive: false,
+      isFavorite: false
+    };
+
+    this._task = task ? task : this._emptyTask;
+    this._editedTask = task ? cloneDeep(task) : this._emptyTask;
     this._datepicker = null;
     this._options = {
       isDuedate: this._task.dueDate,
@@ -198,7 +216,7 @@ export default class TaskCardEdit extends AbstractView {
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
 
-    this._element.querySelector(`form`).addEventListener(`submit`, this._handlers.formSubmit);
+    this.getElement().querySelector(`form`).addEventListener(`submit`, this._handlers.formSubmit);
   }
 
   setKeydownHandler(callback) {
@@ -208,7 +226,7 @@ export default class TaskCardEdit extends AbstractView {
   }
 
   removeFormSubmitHandler() {
-    this._element.querySelector(`form`).removeEventListener(`submit`, this._handlers.formSubmit);
+    this.getElement().querySelector(`form`).removeEventListener(`submit`, this._handlers.formSubmit);
   }
 
   removeKeydownHandler() {

@@ -1,9 +1,10 @@
-import {InsertPlace, SortType, UserAction, UpdateType} from "../constants.js";
+import {InsertPlace, SortType, UserAction, UpdateType, FilterType} from "../constants.js";
 import {render, remove} from "../utils/render.js";
 import BoardView from "../view/board.js";
 import SortingView from "../view/sorting.js";
 import NoTaskView from "../view/no-task.js";
 import TaskPresenter from "./task.js";
+import TaskNewPresenter from "./task-new.js";
 import LoadButtonView from "../view/load-button.js";
 import {getSortedTasksByDate} from "../mock/task.js";
 import {filter} from "../utils/filter.js";
@@ -21,6 +22,7 @@ export default class Board {
 
     this._boardComponent = new BoardView();
     this._noTaskComponent = new NoTaskView();
+    this._taskList = this._boardComponent.getElement().querySelector(`.board__tasks`);
 
     this._sortingComponent = null;
     this._loadButtonComponent = null;
@@ -34,10 +36,18 @@ export default class Board {
 
     this._tasksModel.addObserver(this._handlers.modelEvent);
     this._filterModel.addObserver(this._handlers.modelEvent);
+
+    this._taskNewPresenter = new TaskNewPresenter(this._taskList, this._handlers.viewAction);
   }
 
   init() {
     this._renderBoard();
+  }
+
+  createTask() {
+    this._currentSortType = SortType.DEFAULT;
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
+    this._taskNewPresenter.init();
   }
 
   _getTasks() {
@@ -53,6 +63,8 @@ export default class Board {
   }
 
   _modeChangeHandler() {
+    this._taskNewPresenter.destroy();
+
     Object
       .values(this._taskPresenter)
       .forEach((presenter) => presenter.resetView());
@@ -160,8 +172,6 @@ export default class Board {
     const taskCount = this._getTasks().length;
     const tasks = this._getTasks().slice(0, Math.min(taskCount, this._renderedTaskCount));
 
-    this._taskList = this._boardComponent.getElement().querySelector(`.board__tasks`);
-
     render({container: this._boardContainer, child: this._boardComponent});
 
     if (!tasks) {
@@ -176,6 +186,8 @@ export default class Board {
 
   _clearBoard({resetRenderedTaskCount = false, resetSortType = false} = {}) {
     const taskCount = this._getTasks().length;
+
+    this._taskNewPresenter.destroy();
 
     Object
       .values(this._taskPresenter)

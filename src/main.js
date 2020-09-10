@@ -24,3 +24,10 @@ const filterPresenter = new FilterPresenter(siteMainElement, filterModel, tasksM
 
 filterPresenter.init();
 boardPresenter.init();
+
+const addTaskClickHandler = (evt) => {
+  evt.preventDefault();
+  boardPresenter.createTask();
+};
+
+document.querySelector(`#control__new-task`).addEventListener(`click`, addTaskClickHandler);
