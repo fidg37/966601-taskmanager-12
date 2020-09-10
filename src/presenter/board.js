@@ -6,13 +6,15 @@ import NoTaskView from "../view/no-task.js";
 import TaskPresenter from "./task.js";
 import LoadButtonView from "../view/load-button.js";
 import {getSortedTasksByDate} from "../mock/task.js";
+import {filter} from "../utils/filter.js";
 
 const TASK_COUNT_PER_STEP = 8;
 
 export default class Board {
-  constructor(boardContainer, tasksModel) {
+  constructor(boardContainer, tasksModel, filterModel) {
     this._boardContainer = boardContainer;
     this._tasksModel = tasksModel;
+    this._filterModel = filterModel;
     this._currentSortType = SortType.DEFAULT;
     this._renderedTaskCount = TASK_COUNT_PER_STEP;
     this._taskPresenter = {};
@@ -31,6 +33,7 @@ export default class Board {
     };
 
     this._tasksModel.addObserver(this._handlers.modelEvent);
+    this._filterModel.addObserver(this._handlers.modelEvent);
   }
 
   init() {
@@ -38,10 +41,14 @@ export default class Board {
   }
 
   _getTasks() {
+    const filterType = this._filterModel.getFilter();
+    const tasks = this._tasksModel.getTasks();
+    const filteredTasks = filter[filterType](tasks);
+
     if (this._currentSortType !== SortType.DEFAULT) {
-      return getSortedTasksByDate(this._tasksModel.getTasks(), this._currentSortType);
+      return getSortedTasksByDate(filteredTasks, this._currentSortType);
     } else {
-      return this._tasksModel.getTasks();
+      return filteredTasks;
     }
   }
 
@@ -157,7 +164,7 @@ export default class Board {
 
     render({container: this._boardContainer, child: this._boardComponent});
 
-    if (this._getTasks().every((task) => task.isArchive)) {
+    if (!tasks) {
       this._renderNoTasks();
       return;
     }
