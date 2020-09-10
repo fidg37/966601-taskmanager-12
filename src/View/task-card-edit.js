@@ -1,3 +1,4 @@
+import he from "he";
 import AbstractView from "./abstract.js";
 import {COLORS, Keycodes} from "../constants.js";
 import {formatDate, isTaskRepeating, isTaskExpired} from "../utils/task.js";
@@ -156,7 +157,7 @@ export default class TaskCardEdit extends AbstractView {
                 class="card__text"
                 placeholder="Start typing your text here..."
                 name="text"
-              >${description}</textarea>
+              >${he.encode(description)}</textarea>
             </label>
           </div>
 
